@@ -1,0 +1,20 @@
+{
+  "name": "sanflait",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n web,api -c blue,green \"pnpm --filter @sanflait/web dev\" \"pnpm --filter @sanflait/api start:dev\"",
+    "build": "pnpm --filter @sanflait/web build && pnpm --filter @sanflait/api build",
+    "lint": "pnpm -r lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20"
+  }
+}

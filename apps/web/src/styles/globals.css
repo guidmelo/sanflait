@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body, #root { height: 100%; }
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: #1A1916; color: #FAF8F4; }
+}
+
+@layer components {
+  /* ============================================
+     PUBLIC SITE COMPONENTS
+     ============================================ */
+  .editorial-eyebrow {
+    @apply text-[10px] tracking-[0.22em] uppercase text-warm-gray font-medium;
+  }
+  .editorial-title {
+    @apply font-serif text-charcoal font-light leading-[1.05];
+  }
+  .editorial-link {
+    @apply text-[10px] tracking-[0.2em] uppercase inline-flex items-center gap-2 cursor-pointer transition-colors;
+  }
+  .public-cta {
+    @apply inline-flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase border border-charcoal/15 px-6 py-3 transition-all hover:bg-charcoal hover:text-cream cursor-pointer;
+  }
+  .public-cta-dark {
+    @apply inline-flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase border border-cream/30 px-6 py-3 text-cream transition-all hover:bg-cream/10 hover:border-cream/60 cursor-pointer;
+  }
+
+  /* ============================================
+     ADMIN COMPONENTS — Power BI Dark
+     ============================================ */
+  .admin-card {
+    @apply bg-ink-2 border border-line rounded-md;
+  }
+  .admin-kpi {
+    @apply bg-ink-2 border border-line rounded-md p-4 relative overflow-hidden;
+  }
+  .admin-pill {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium;
+  }
+  .admin-input {
+    @apply bg-ink-3 border border-line rounded text-ink-text-1 text-[12px] px-3 py-1.5 outline-none focus:border-accent-blue transition-colors;
+  }
+  .admin-button {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-[11px] font-medium transition-colors;
+  }
+  .admin-button-primary {
+    @apply admin-button bg-accent-blue text-white hover:opacity-90;
+  }
+  .admin-button-ghost {
+    @apply admin-button bg-ink-3 border border-line text-ink-text-2 hover:bg-ink-4;
+  }
+
+  /* Scrollbar */
+  .admin-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+  .admin-scroll::-webkit-scrollbar-track { background: transparent; }
+  .admin-scroll::-webkit-scrollbar-thumb { background: #3A3A42; border-radius: 3px; }
+  .admin-scroll::-webkit-scrollbar-thumb:hover { background: #4A4A55; }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+}
