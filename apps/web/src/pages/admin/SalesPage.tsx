@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import { Plus, Search, FileDown, X } from 'lucide-react';
 import { AdminTopBar } from '@/components/admin/AdminTopBar';
 import { Card } from '@/components/admin/Card';
-import { sales as initialSales, vendors, customers, type Sale } from '@/lib/mock';
+import { useData } from '@/stores/data';
+import { type Sale } from '@/lib/mock';
 import { formatBRL, relativeTime } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
@@ -11,16 +12,15 @@ const STATUS_STYLES = {
   EM_NEGOCIACAO: 'bg-accent-amber-dim text-accent-amber',
   PERDIDO: 'bg-accent-red-dim text-accent-red',
 };
-const STATUS_LABEL: Record<string, string> = {
-  CONVERTIDO: 'Convertido',
-  EM_NEGOCIACAO: 'Negociando',
-  PERDIDO: 'Perdido',
+const STATUS_LABEL: Record<string, string> = { CONVERTIDO: 'Convertido', EM_NEGOCIACAO: 'Negociando', PERDIDO: 'Perdido' };
+
+const EMPTY_FORM = {
+  customerId: '', vendorId: '', storeId: '', amount: '',
+  description: '', channel: 'WhatsApp', status: 'CONVERTIDO' as Sale['status'],
 };
 
-const EMPTY_FORM = { customerId: '', vendorId: '', amount: '', description: '', channel: 'Loja física', status: 'CONVERTIDO' as Sale['status'] };
-
 export function SalesPage() {
-  const [sales, setSales] = useState(initialSales);
+  const { sales, customers, vendors, stores, addSale } = useData();
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -39,28 +39,36 @@ export function SalesPage() {
     if (!form.customerId || !form.amount) return;
     const customer = customers.find((c) => c.id === form.customerId);
     const vendor = vendors.find((v) => v.id === form.vendorId);
-    const newSale: Sale = {
-      id: `s${Date.now()}`,
+    const store = stores.find((s) => s.id === form.storeId);
+    addSale({
+      id: `sa${Date.now()}`,
       customerId: form.customerId,
       customerName: customer?.name ?? '—',
       vendorId: form.vendorId,
       vendorName: vendor?.name ?? '—',
+      storeId: form.storeId || undefined,
+      storeName: store?.name || undefined,
       amount: parseFloat(form.amount),
       description: form.description || 'Produto',
       channel: form.channel,
       status: form.status,
       createdAt: new Date().toISOString(),
-    };
-    setSales((prev) => [newSale, ...prev]);
+    });
     setForm(EMPTY_FORM);
     setShowModal(false);
+  };
+
+  const handleExport = () => {
+    const rows = filtered.map((s) => `${s.customerName};${s.vendorName};${s.amount};${s.channel};${s.status};${s.createdAt}`).join('\n');
+    const blob = new Blob([`Cliente;Vendedor;Valor;Canal;Status;Data\n${rows}`], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'vendas.csv'; a.click();
   };
 
   const totalRevenue = sales.filter((s) => s.status === 'CONVERTIDO').reduce((acc, s) => acc + s.amount, 0);
 
   return (
     <>
-      <AdminTopBar title="Vendas" subtitle={`${filtered.length} de ${sales.length} registros`} showLive={false} />
+      <AdminTopBar title="Vendas" subtitle={`${filtered.length} de ${sales.length} registros`} showLive={false} onExport={handleExport} />
       <div className="flex-1 overflow-y-auto admin-scroll p-4">
         <div className="grid grid-cols-4 gap-2.5 mb-3">
           {[
@@ -78,34 +86,21 @@ export function SalesPage() {
 
         <Card
           title="Todas as vendas"
-          subtitle="Filtre por nome, vendedor ou status"
+          subtitle="Filtre por cliente, vendedor ou status"
           action={
             <>
               <div className="flex items-center gap-1.5 bg-ink-3 border border-line rounded px-2 py-1">
                 <Search size={11} className="text-ink-text-3" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Buscar..."
-                  className="bg-transparent outline-none text-[11px] w-28 text-ink-text-1"
-                />
+                <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar..." className="bg-transparent outline-none text-[11px] w-28 text-ink-text-1" />
                 {query && <button onClick={() => setQuery('')}><X size={10} className="text-ink-text-3 hover:text-ink-text-1" /></button>}
               </div>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="admin-button-ghost cursor-pointer text-[11px]"
-              >
+              <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="admin-button-ghost cursor-pointer text-[11px]">
                 <option value="">Todos os status</option>
                 <option value="CONVERTIDO">Convertido</option>
                 <option value="EM_NEGOCIACAO">Em negociação</option>
                 <option value="PERDIDO">Perdido</option>
               </select>
-              <button className="admin-button-ghost" onClick={() => {
-                const rows = filtered.map((s) => `${s.customerName};${s.vendorName};${s.amount};${s.status};${s.createdAt}`).join('\n');
-                const blob = new Blob([`Cliente;Vendedor;Valor;Status;Data\n${rows}`], { type: 'text/csv' });
-                const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'vendas.csv'; a.click();
-              }}><FileDown size={11} /> Excel</button>
+              <button className="admin-button-ghost" onClick={handleExport}><FileDown size={11} /> Excel</button>
               <button className="admin-button-primary" onClick={() => setShowModal(true)}><Plus size={11} /> Nova venda</button>
             </>
           }
@@ -131,11 +126,9 @@ export function SalesPage() {
                     <td className="py-2.5 px-4 text-ink-text-1 font-medium">{s.customerName}</td>
                     <td className="py-2.5 text-ink-text-2">{s.description}</td>
                     <td className="py-2.5 text-ink-text-2">{s.vendorName}</td>
-                    <td className="py-2.5 text-ink-text-3">{s.channel}</td>
+                    <td className="py-2.5 text-ink-text-3">{s.channel}{s.storeName ? ` · ${s.storeName}` : ''}</td>
                     <td className="py-2.5 text-right text-ink-text-1 font-medium">{formatBRL(s.amount)}</td>
-                    <td className="py-2.5 text-center">
-                      <span className={cn('admin-pill', STATUS_STYLES[s.status])}>{STATUS_LABEL[s.status]}</span>
-                    </td>
+                    <td className="py-2.5 text-center"><span className={cn('admin-pill', STATUS_STYLES[s.status])}>{STATUS_LABEL[s.status]}</span></td>
                     <td className="py-2.5 text-right text-ink-text-3 px-4">{relativeTime(s.createdAt)}</td>
                   </tr>
                 ))}
@@ -145,7 +138,6 @@ export function SalesPage() {
         </Card>
       </div>
 
-      {/* Modal: Nova Venda */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setShowModal(false)}>
           <div className="bg-ink-2 border border-line rounded-lg p-6 w-full max-w-md shadow-2xl" onClick={(e) => e.stopPropagation()}>
@@ -160,6 +152,9 @@ export function SalesPage() {
                   <option value="">Selecionar cliente</option>
                   {customers.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
+                {customers.length === 0 && (
+                  <p className="text-[10px] text-accent-amber mt-1">Cadastre clientes primeiro na aba Clientes.</p>
+                )}
               </div>
               <div>
                 <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Vendedor</label>
@@ -179,15 +174,24 @@ export function SalesPage() {
                 </div>
                 <div>
                   <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Canal</label>
-                  <select value={form.channel} onChange={(e) => setForm({ ...form, channel: e.target.value })} className="admin-input w-full">
-                    <option>Loja física</option>
+                  <select value={form.channel} onChange={(e) => setForm({ ...form, channel: e.target.value, storeId: '' })} className="admin-input w-full">
                     <option>WhatsApp</option>
+                    <option>Loja física</option>
                     <option>Instagram</option>
                     <option>Site</option>
                     <option>Indicação</option>
                   </select>
                 </div>
               </div>
+              {form.channel === 'Loja física' && (
+                <div>
+                  <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Qual loja?</label>
+                  <select value={form.storeId} onChange={(e) => setForm({ ...form, storeId: e.target.value })} className="admin-input w-full">
+                    <option value="">Selecionar loja</option>
+                    {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </div>
+              )}
               <div>
                 <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Status</label>
                 <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as Sale['status'] })} className="admin-input w-full">

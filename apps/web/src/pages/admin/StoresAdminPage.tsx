@@ -2,23 +2,19 @@ import { useState } from 'react';
 import { Plus, MapPin, Clock, Edit2, X, Check } from 'lucide-react';
 import { AdminTopBar } from '@/components/admin/AdminTopBar';
 import { Card } from '@/components/admin/Card';
-import { stores as initialStores, vendors, type Store } from '@/lib/mock';
+import { useData } from '@/stores/data';
+import { type Store } from '@/lib/mock';
 
 const EMPTY_FORM = { name: '', address: '', city: '', hours: '' };
 
 export function StoresAdminPage() {
-  const [stores, setStores] = useState(initialStores);
+  const { stores, vendors, addStore, updateStore } = useData();
   const [showModal, setShowModal] = useState(false);
   const [editStore, setEditStore] = useState<Store | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saved, setSaved] = useState(false);
 
-  const openNew = () => {
-    setForm(EMPTY_FORM);
-    setEditStore(null);
-    setShowModal(true);
-  };
-
+  const openNew = () => { setForm(EMPTY_FORM); setEditStore(null); setShowModal(true); };
   const openEdit = (s: Store) => {
     setForm({ name: s.name, address: s.address, city: s.city, hours: s.hours });
     setEditStore(s);
@@ -28,9 +24,9 @@ export function StoresAdminPage() {
   const handleSave = () => {
     if (!form.name || !form.address) return;
     if (editStore) {
-      setStores((prev) => prev.map((s) => s.id === editStore.id ? { ...s, ...form } : s));
+      updateStore(editStore.id, form);
     } else {
-      const newStore: Store = {
+      addStore({
         id: `st${Date.now()}`,
         name: form.name,
         address: form.address,
@@ -39,21 +35,24 @@ export function StoresAdminPage() {
         mapsUrl: '',
         wazeUrl: '',
         description: '',
-      };
-      setStores((prev) => [...prev, newStore]);
+      });
     }
     setSaved(true);
-    setTimeout(() => {
-      setSaved(false);
-      setShowModal(false);
-      setEditStore(null);
-      setForm(EMPTY_FORM);
-    }, 800);
+    setTimeout(() => { setSaved(false); setShowModal(false); setEditStore(null); setForm(EMPTY_FORM); }, 800);
+  };
+
+  const handleExport = () => {
+    const rows = stores.map((s) => {
+      const team = vendors.filter((v) => v.storeId === s.id);
+      return `${s.name};${s.address};${s.city};${s.hours};${team.length}`;
+    }).join('\n');
+    const blob = new Blob([`Loja;Endereço;Cidade;Horário;Equipe\n${rows}`], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lojas.csv'; a.click();
   };
 
   return (
     <>
-      <AdminTopBar title="Lojas" subtitle={`${stores.length} lojas físicas`} showLive={false} />
+      <AdminTopBar title="Lojas" subtitle={`${stores.length} lojas físicas`} showLive={false} onExport={handleExport} />
       <div className="flex-1 overflow-y-auto admin-scroll p-4">
         <Card
           title="Unidades físicas"
@@ -81,10 +80,7 @@ export function StoresAdminPage() {
                     <span className="absolute top-3 left-3 admin-pill bg-ink-0/60 text-ink-text-1 backdrop-blur">
                       Loja {String(i + 1).padStart(2, '0')}
                     </span>
-                    <button
-                      className="absolute top-3 right-3 admin-button-ghost"
-                      onClick={() => openEdit(s)}
-                    >
+                    <button className="absolute top-3 right-3 admin-button-ghost" onClick={() => openEdit(s)}>
                       <Edit2 size={11} /> Editar
                     </button>
                   </div>
@@ -95,23 +91,17 @@ export function StoresAdminPage() {
                         <MapPin size={11} className="mt-0.5 text-ink-text-3" />
                         <span>{s.address} · {s.city}</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Clock size={11} className="text-ink-text-3" /> {s.hours}
-                      </div>
+                      {s.hours && (
+                        <div className="flex items-center gap-2">
+                          <Clock size={11} className="text-ink-text-3" /> {s.hours}
+                        </div>
+                      )}
                     </div>
-
                     <div className="border-t border-line pt-3">
-                      <p className="text-[9px] uppercase tracking-wider text-ink-text-3 mb-2">
-                        Equipe ({team.length})
-                      </p>
+                      <p className="text-[9px] uppercase tracking-wider text-ink-text-3 mb-2">Equipe ({team.length})</p>
                       <div className="flex -space-x-2 mb-3">
                         {team.map((v) => (
-                          <div
-                            key={v.id}
-                            className="w-7 h-7 rounded-full text-white text-[9px] font-semibold flex items-center justify-center border-2 border-ink-2"
-                            style={{ background: v.color }}
-                            title={v.name}
-                          >
+                          <div key={v.id} className="w-7 h-7 rounded-full text-white text-[9px] font-semibold flex items-center justify-center border-2 border-ink-2" style={{ background: v.color }} title={v.name}>
                             {v.initials}
                           </div>
                         ))}
@@ -120,15 +110,11 @@ export function StoresAdminPage() {
                       <div className="grid grid-cols-2 gap-2 text-[10px]">
                         <div className="bg-ink-3 rounded px-2 py-1.5">
                           <p className="text-ink-text-3">Vendas</p>
-                          <p className="text-ink-text-1 font-medium">
-                            {team.reduce((sum, v) => sum + v.metrics.sales, 0)}
-                          </p>
+                          <p className="text-ink-text-1 font-medium">{team.reduce((sum, v) => sum + v.metrics.sales, 0)}</p>
                         </div>
                         <div className="bg-ink-3 rounded px-2 py-1.5">
                           <p className="text-ink-text-3">Receita</p>
-                          <p className="text-accent-teal font-medium">
-                            R$ {(team.reduce((sum, v) => sum + v.metrics.revenue, 0) / 1000).toFixed(1)}K
-                          </p>
+                          <p className="text-accent-teal font-medium">R$ {(team.reduce((sum, v) => sum + v.metrics.revenue, 0) / 1000).toFixed(1)}K</p>
                         </div>
                       </div>
                     </div>
@@ -140,33 +126,30 @@ export function StoresAdminPage() {
         </Card>
       </div>
 
-      {/* Modal: Nova / Editar Loja */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setShowModal(false)}>
           <div className="bg-ink-2 border border-line rounded-lg p-6 w-full max-w-sm shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-[14px] font-semibold text-ink-text-1">
-                {editStore ? 'Editar Loja' : 'Nova Loja'}
-              </h2>
+              <h2 className="text-[14px] font-semibold text-ink-text-1">{editStore ? 'Editar Loja' : 'Nova Loja'}</h2>
               <button onClick={() => setShowModal(false)} className="text-ink-text-3 hover:text-ink-text-1"><X size={16} /></button>
             </div>
             <div className="space-y-3">
-              <div>
-                <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Nome *</label>
-                <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Nome da loja" className="admin-input w-full" />
-              </div>
-              <div>
-                <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Endereço *</label>
-                <input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Rua, número" className="admin-input w-full" />
-              </div>
-              <div>
-                <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Cidade</label>
-                <input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="Cidade, BA" className="admin-input w-full" />
-              </div>
-              <div>
-                <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Horário de funcionamento</label>
-                <input value={form.hours} onChange={(e) => setForm({ ...form, hours: e.target.value })} placeholder="Seg–Sex 9h–20h · Sáb 9h–18h" className="admin-input w-full" />
-              </div>
+              {[
+                { label: 'Nome *', key: 'name', ph: 'Nome da loja' },
+                { label: 'Endereço *', key: 'address', ph: 'Rua, número' },
+                { label: 'Cidade', key: 'city', ph: 'Recife, PE' },
+                { label: 'Horário de funcionamento', key: 'hours', ph: 'Seg–Sáb 9h–19h' },
+              ].map(({ label, key, ph }) => (
+                <div key={key}>
+                  <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">{label}</label>
+                  <input
+                    value={form[key as keyof typeof form]}
+                    onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                    placeholder={ph}
+                    className="admin-input w-full"
+                  />
+                </div>
+              ))}
             </div>
             <div className="flex gap-2 mt-5">
               <button onClick={() => setShowModal(false)} className="admin-button-ghost flex-1">Cancelar</button>

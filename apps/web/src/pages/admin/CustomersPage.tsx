@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import { Plus, Search, FileDown, Phone, Mail, X } from 'lucide-react';
 import { AdminTopBar } from '@/components/admin/AdminTopBar';
 import { Card } from '@/components/admin/Card';
-import { customers as initialCustomers, vendors, type Customer } from '@/lib/mock';
+import { useData } from '@/stores/data';
+import { type Customer } from '@/lib/mock';
 import { cn, relativeTime } from '@/lib/utils';
 
 const STATUS_STYLES = {
@@ -11,17 +12,16 @@ const STATUS_STYLES = {
   CONVERTIDO: 'bg-accent-green-dim text-accent-green',
   PERDIDO: 'bg-accent-red-dim text-accent-red',
 };
-const STATUS_LABEL = {
-  LEAD: 'Lead',
-  EM_NEGOCIACAO: 'Negociando',
-  CONVERTIDO: 'Convertido',
-  PERDIDO: 'Perdido',
+const STATUS_LABEL = { LEAD: 'Lead', EM_NEGOCIACAO: 'Negociando', CONVERTIDO: 'Convertido', PERDIDO: 'Perdido' };
+
+const EMPTY_FORM = {
+  name: '', phone: '', email: '', neighborhood: '', age: '',
+  gender: 'FEMININO' as Customer['gender'],
+  source: 'Instagram', vendorId: '', status: 'LEAD' as Customer['status'],
 };
 
-const EMPTY_FORM = { name: '', phone: '', email: '', neighborhood: '', age: '', gender: 'FEMININO' as Customer['gender'], source: 'Instagram', vendorId: '', status: 'LEAD' as Customer['status'] };
-
 export function CustomersPage() {
-  const [customers, setCustomers] = useState(initialCustomers);
+  const { customers, vendors, addCustomer } = useData();
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -38,7 +38,7 @@ export function CustomersPage() {
 
   const handleAdd = () => {
     if (!form.name || !form.phone) return;
-    const newCustomer: Customer = {
+    addCustomer({
       id: `c${Date.now()}`,
       name: form.name,
       phone: form.phone,
@@ -50,15 +50,25 @@ export function CustomersPage() {
       source: form.source,
       vendorId: form.vendorId || (vendors[0]?.id ?? ''),
       createdAt: new Date().toISOString(),
-    };
-    setCustomers((prev) => [newCustomer, ...prev]);
+    });
     setForm(EMPTY_FORM);
     setShowModal(false);
   };
 
+  const handleExport = () => {
+    const rows = filtered.map((c) => `${c.name};${c.phone};${c.neighborhood};${c.status}`).join('\n');
+    const blob = new Blob([`Nome;Telefone;Bairro;Status\n${rows}`], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'clientes.csv'; a.click();
+  };
+
   return (
     <>
-      <AdminTopBar title="Clientes" subtitle={`${filtered.length} de ${customers.length} contatos`} showLive={false} />
+      <AdminTopBar
+        title="Clientes"
+        subtitle={`${filtered.length} de ${customers.length} contatos`}
+        showLive={false}
+        onExport={handleExport}
+      />
       <div className="flex-1 overflow-y-auto admin-scroll p-4">
         <div className="grid grid-cols-4 gap-2.5 mb-3">
           {[
@@ -81,12 +91,7 @@ export function CustomersPage() {
             <>
               <div className="flex items-center gap-1.5 bg-ink-3 border border-line rounded px-2 py-1">
                 <Search size={11} className="text-ink-text-3" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Buscar..."
-                  className="bg-transparent outline-none text-[11px] w-28 text-ink-text-1"
-                />
+                <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar..." className="bg-transparent outline-none text-[11px] w-28 text-ink-text-1" />
                 {query && <button onClick={() => setQuery('')}><X size={10} className="text-ink-text-3 hover:text-ink-text-1" /></button>}
               </div>
               <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="admin-button-ghost cursor-pointer text-[11px]">
@@ -96,11 +101,7 @@ export function CustomersPage() {
                 <option value="CONVERTIDO">Convertido</option>
                 <option value="PERDIDO">Perdido</option>
               </select>
-              <button className="admin-button-ghost" onClick={() => {
-                const rows = filtered.map((c) => `${c.name};${c.phone};${c.neighborhood};${c.status}`).join('\n');
-                const blob = new Blob([`Nome;Telefone;Bairro;Status\n${rows}`], { type: 'text/csv' });
-                const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'clientes.csv'; a.click();
-              }}><FileDown size={11} /> Excel</button>
+              <button className="admin-button-ghost" onClick={handleExport}><FileDown size={11} /> Excel</button>
               <button className="admin-button-primary" onClick={() => setShowModal(true)}><Plus size={11} /> Novo cliente</button>
             </>
           }
@@ -127,10 +128,8 @@ export function CustomersPage() {
                   return (
                     <tr key={c.id} className="border-b border-line/50 hover:bg-ink-3 transition-colors">
                       <td className="py-2.5 px-4">
-                        <div>
-                          <p className="text-ink-text-1 font-medium">{c.name}</p>
-                          <p className="text-ink-text-3 text-[10px]">{c.gender}</p>
-                        </div>
+                        <p className="text-ink-text-1 font-medium">{c.name}</p>
+                        <p className="text-ink-text-3 text-[10px]">{c.gender}</p>
                       </td>
                       <td className="py-2.5">
                         <div className="space-y-0.5 text-ink-text-2">
@@ -142,12 +141,12 @@ export function CustomersPage() {
                       <td className="py-2.5 text-center text-ink-text-2">{c.age}</td>
                       <td className="py-2.5 text-ink-text-2">{c.source}</td>
                       <td className="py-2.5">
-                        {v && (
+                        {v ? (
                           <div className="flex items-center gap-1.5">
                             <div className="w-4 h-4 rounded-full text-white text-[7px] font-semibold flex items-center justify-center" style={{ background: v.color }}>{v.initials}</div>
                             <span className="text-ink-text-2 text-[10px]">{v.name.split(' ')[0]}</span>
                           </div>
-                        )}
+                        ) : <span className="text-ink-text-4">—</span>}
                       </td>
                       <td className="py-2.5 text-center">
                         <span className={cn('admin-pill', STATUS_STYLES[c.status])}>{STATUS_LABEL[c.status]}</span>
@@ -162,7 +161,6 @@ export function CustomersPage() {
         </Card>
       </div>
 
-      {/* Modal: Novo Cliente */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setShowModal(false)}>
           <div className="bg-ink-2 border border-line rounded-lg p-6 w-full max-w-md shadow-2xl" onClick={(e) => e.stopPropagation()}>
@@ -178,7 +176,7 @@ export function CustomersPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Telefone *</label>
-                  <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="(75) 99900-0000" className="admin-input w-full" />
+                  <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="(81) 99900-0000" className="admin-input w-full" />
                 </div>
                 <div>
                   <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Idade</label>
@@ -207,12 +205,7 @@ export function CustomersPage() {
                 <div>
                   <label className="text-[10px] uppercase tracking-wider text-ink-text-3 block mb-1">Origem</label>
                   <select value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} className="admin-input w-full">
-                    <option>Instagram</option>
-                    <option>WhatsApp</option>
-                    <option>Indicação</option>
-                    <option>Loja física</option>
-                    <option>Site</option>
-                    <option>TikTok</option>
+                    {['Instagram', 'WhatsApp', 'Indicação', 'Loja física', 'Site', 'TikTok'].map((o) => <option key={o}>{o}</option>)}
                   </select>
                 </div>
                 <div>

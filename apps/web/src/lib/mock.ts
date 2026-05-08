@@ -46,6 +46,8 @@ export interface Sale {
   customerName: string;
   vendorId: string;
   vendorName: string;
+  storeId?: string;
+  storeName?: string;
   amount: number;
   description: string;
   channel: string;

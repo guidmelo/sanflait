@@ -1,24 +1,25 @@
 import { useState } from 'react';
-import { Plus, Copy, ExternalLink, Trophy, X } from 'lucide-react';
+import { Plus, Copy, ExternalLink, Trophy, X, Trash2, MoreVertical } from 'lucide-react';
 import { AdminTopBar } from '@/components/admin/AdminTopBar';
 import { Card } from '@/components/admin/Card';
-import { vendors as initialVendors, stores, type Vendor } from '@/lib/mock';
+import { useData } from '@/stores/data';
+import { type Vendor } from '@/lib/mock';
 import { cn, formatBRL, formatPct } from '@/lib/utils';
 
 const AVATAR_COLORS = ['#3B82F6', '#8B5CF6', '#14B8A6', '#F59E0B', '#EF4444', '#10B981'];
-
 const EMPTY_FORM = { name: '', email: '', phone: '', storeId: '' };
 
 export function VendorsPage() {
-  const [vendors, setVendors] = useState(initialVendors);
+  const { vendors, stores, addVendor, removeVendor } = useData();
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [copied, setCopied] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState<string | null>(null);
 
   const sorted = [...vendors].sort((a, b) => b.metrics.revenue - a.metrics.revenue);
 
   const handleCopy = (slug: string) => {
-    navigator.clipboard.writeText(`https://sanflait.com/r/${slug}`);
+    navigator.clipboard.writeText(`https://sanflait.vercel.app/r/${slug}`);
     setCopied(slug);
     setTimeout(() => setCopied(null), 2000);
   };
@@ -40,14 +41,20 @@ export function VendorsPage() {
       storeId: form.storeId || (stores[0]?.id ?? ''),
       metrics: { sales: 0, revenue: 0, conversion: 0, leads: 0 },
     };
-    setVendors((prev) => [...prev, newVendor]);
+    addVendor(newVendor);
     setForm(EMPTY_FORM);
     setShowModal(false);
   };
 
+  const handleExport = () => {
+    const rows = sorted.map((v) => `${v.name};${v.email};${v.phone};${v.metrics.sales};${v.metrics.revenue}`).join('\n');
+    const blob = new Blob([`Nome;Email;Telefone;Vendas;Receita\n${rows}`], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'vendedores.csv'; a.click();
+  };
+
   return (
     <>
-      <AdminTopBar title="Vendedores" subtitle={`${vendors.length} ativos`} showLive={false} />
+      <AdminTopBar title="Vendedores" subtitle={`${vendors.length} ativos`} showLive={false} onExport={handleExport} />
       <div className="flex-1 overflow-y-auto admin-scroll p-4">
         <div className="grid grid-cols-4 gap-2.5 mb-3">
           {[
@@ -65,86 +72,99 @@ export function VendorsPage() {
 
         <Card
           title="Lista de vendedores"
-          subtitle="Cada um possui um link único de rastreio (last-click attribution)"
+          subtitle="Cada vendedor possui um link único de rastreio (last-click attribution)"
           action={
             <button className="admin-button-primary" onClick={() => setShowModal(true)}>
               <Plus size={11} /> Novo vendedor
             </button>
           }
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {sorted.map((v, i) => (
-              <div key={v.id} className="bg-ink-2 border border-line rounded p-4 hover:border-line-strong transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full text-white text-[14px] font-semibold flex items-center justify-center flex-shrink-0" style={{ background: v.color }}>
-                    {v.initials}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <p className="text-[14px] font-medium text-ink-text-1">{v.name}</p>
-                      {i < 3 && (
-                        <Trophy
-                          size={12}
-                          className={i === 0 ? 'text-accent-amber' : i === 1 ? 'text-ink-text-2' : 'text-ink-text-3'}
-                        />
-                      )}
+          {sorted.length === 0 ? (
+            <div className="py-12 text-center">
+              <p className="text-[13px] text-ink-text-3 mb-3">Nenhum vendedor cadastrado</p>
+              <button className="admin-button-primary" onClick={() => setShowModal(true)}>
+                <Plus size={11} /> Adicionar primeiro vendedor
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {sorted.map((v, i) => (
+                <div key={v.id} className="bg-ink-2 border border-line rounded p-4 hover:border-line-strong transition-colors">
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-full text-white text-[14px] font-semibold flex items-center justify-center flex-shrink-0" style={{ background: v.color }}>
+                      {v.initials}
                     </div>
-                    <p className="text-[10px] text-ink-text-3">{v.email}</p>
-                    <p className="text-[10px] text-ink-text-3">{v.phone}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <p className="text-[14px] font-medium text-ink-text-1">{v.name}</p>
+                        {i < 3 && (
+                          <Trophy size={12} className={i === 0 ? 'text-accent-amber' : i === 1 ? 'text-ink-text-2' : 'text-ink-text-3'} />
+                        )}
+                      </div>
+                      <p className="text-[10px] text-ink-text-3">{v.email}</p>
+                      <p className="text-[10px] text-ink-text-3">{v.phone}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="admin-pill bg-accent-blue-dim text-accent-blue">#{i + 1}</span>
+                      <div className="relative">
+                        <button
+                          onClick={() => setMenuOpen(menuOpen === v.id ? null : v.id)}
+                          className="p-1 text-ink-text-3 hover:text-ink-text-1 transition-colors"
+                        >
+                          <MoreVertical size={13} />
+                        </button>
+                        {menuOpen === v.id && (
+                          <div className="absolute right-0 top-6 bg-ink-2 border border-line rounded shadow-xl z-20 w-36">
+                            <button
+                              onClick={() => { removeVendor(v.id); setMenuOpen(null); }}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[11px] text-accent-red hover:bg-accent-red-dim transition-colors"
+                            >
+                              <Trash2 size={11} /> Remover
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <span className="admin-pill bg-accent-blue-dim text-accent-blue">#{i + 1}</span>
-                </div>
 
-                <div className="grid grid-cols-4 gap-2 mb-4">
-                  <div className="bg-ink-3 rounded p-2">
-                    <p className="text-[9px] uppercase tracking-wider text-ink-text-3 mb-0.5">Vendas</p>
-                    <p className="text-[13px] font-semibold text-ink-text-1">{v.metrics.sales}</p>
+                  <div className="grid grid-cols-4 gap-2 mb-4">
+                    {[
+                      { label: 'Vendas', value: v.metrics.sales.toString(), color: 'text-ink-text-1' },
+                      { label: 'Receita', value: `R$ ${(v.metrics.revenue / 1000).toFixed(1)}K`, color: 'text-accent-teal' },
+                      { label: 'Conv.', value: formatPct(v.metrics.conversion), color: 'text-accent-amber' },
+                      { label: 'Leads', value: v.metrics.leads.toString(), color: 'text-ink-text-1' },
+                    ].map((m) => (
+                      <div key={m.label} className="bg-ink-3 rounded p-2">
+                        <p className="text-[9px] uppercase tracking-wider text-ink-text-3 mb-0.5">{m.label}</p>
+                        <p className={cn('text-[13px] font-semibold', m.color)}>{m.value}</p>
+                      </div>
+                    ))}
                   </div>
-                  <div className="bg-ink-3 rounded p-2">
-                    <p className="text-[9px] uppercase tracking-wider text-ink-text-3 mb-0.5">Receita</p>
-                    <p className="text-[13px] font-semibold text-accent-teal">R$ {(v.metrics.revenue / 1000).toFixed(1)}K</p>
-                  </div>
-                  <div className="bg-ink-3 rounded p-2">
-                    <p className="text-[9px] uppercase tracking-wider text-ink-text-3 mb-0.5">Conv.</p>
-                    <p className="text-[13px] font-semibold text-accent-amber">{formatPct(v.metrics.conversion)}</p>
-                  </div>
-                  <div className="bg-ink-3 rounded p-2">
-                    <p className="text-[9px] uppercase tracking-wider text-ink-text-3 mb-0.5">Leads</p>
-                    <p className="text-[13px] font-semibold text-ink-text-1">{v.metrics.leads}</p>
-                  </div>
-                </div>
 
-                <div className="bg-ink-3 border border-line rounded p-2.5">
-                  <p className="text-[9px] uppercase tracking-wider text-ink-text-3 mb-1.5">Link único de rastreio</p>
-                  <div className="flex items-center gap-2">
-                    <code className="flex-1 text-[10px] text-accent-blue truncate">
-                      sanflait.com/r/{v.slug}
-                    </code>
-                    <button
-                      onClick={() => handleCopy(v.slug)}
-                      className={cn('flex-shrink-0 transition-colors', copied === v.slug ? 'text-accent-green' : 'text-ink-text-3 hover:text-ink-text-1')}
-                      aria-label="Copiar"
-                    >
-                      <Copy size={11} />
-                    </button>
-                    <a
-                      href={`/r/${v.slug}`}
-                      target="_blank"
-                      rel="noopener"
-                      className="text-ink-text-3 hover:text-ink-text-1 flex-shrink-0"
-                      aria-label="Abrir"
-                    >
-                      <ExternalLink size={11} />
-                    </a>
+                  <div className="bg-ink-3 border border-line rounded p-2.5">
+                    <p className="text-[9px] uppercase tracking-wider text-ink-text-3 mb-1.5">Link único de rastreio</p>
+                    <div className="flex items-center gap-2">
+                      <code className="flex-1 text-[10px] text-accent-blue truncate">
+                        sanflait.vercel.app/r/{v.slug}
+                      </code>
+                      <button
+                        onClick={() => handleCopy(v.slug)}
+                        className={cn('flex-shrink-0 transition-colors', copied === v.slug ? 'text-accent-green' : 'text-ink-text-3 hover:text-ink-text-1')}
+                      >
+                        <Copy size={11} />
+                      </button>
+                      <a href={`/r/${v.slug}`} target="_blank" rel="noopener" className="text-ink-text-3 hover:text-ink-text-1 flex-shrink-0">
+                        <ExternalLink size={11} />
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </Card>
       </div>
 
-      {/* Modal: Novo Vendedor */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setShowModal(false)}>
           <div className="bg-ink-2 border border-line rounded-lg p-6 w-full max-w-sm shadow-2xl" onClick={(e) => e.stopPropagation()}>
