@@ -48,7 +48,7 @@ export function CustomersPage() {
       gender: form.gender,
       status: form.status,
       source: form.source,
-      vendorId: form.vendorId || vendors[0]?.id ?? '',
+      vendorId: form.vendorId || (vendors[0]?.id ?? ''),
       createdAt: new Date().toISOString(),
     };
     setCustomers((prev) => [newCustomer, ...prev]);
