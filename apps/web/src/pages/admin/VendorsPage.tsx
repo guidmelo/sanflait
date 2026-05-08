@@ -33,6 +33,7 @@ export function VendorsPage() {
       name: form.name,
       email: form.email,
       phone: form.phone,
+      avatar: '',
       slug,
       initials,
       color,
