@@ -1,11 +1,27 @@
+import { useState, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowRight, SlidersHorizontal } from 'lucide-react';
+import { ArrowRight, SlidersHorizontal, X } from 'lucide-react';
 import { products } from '@/lib/mock';
 import { formatBRL } from '@/lib/utils';
+
+const PAGE_SIZE = 8;
 
 export function CollectionPage() {
   const { slug } = useParams();
   const title = slug ? slug.charAt(0).toUpperCase() + slug.slice(1) : 'Coleção';
+  const [sort, setSort] = useState('newest');
+  const [visible, setVisible] = useState(PAGE_SIZE);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const sorted = useMemo(() => {
+    const list = [...products];
+    if (sort === 'price-high') list.sort((a, b) => b.price - a.price);
+    else if (sort === 'price-low') list.sort((a, b) => a.price - b.price);
+    return list;
+  }, [sort]);
+
+  const displayed = sorted.slice(0, visible);
+  const hasMore = visible < sorted.length;
 
   return (
     <div className="bg-cream">
@@ -25,21 +41,40 @@ export function CollectionPage() {
       {/* Filters */}
       <div className="border-b border-beige sticky top-16 md:top-20 bg-cream/95 backdrop-blur-md z-20">
         <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-14 h-12 flex items-center justify-between">
-          <button className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-charcoal">
-            <SlidersHorizontal size={12} /> Filtrar
+          <button
+            onClick={() => setShowFilters((v) => !v)}
+            className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-charcoal"
+          >
+            {showFilters ? <X size={12} /> : <SlidersHorizontal size={12} />}
+            {showFilters ? 'Fechar' : 'Filtrar'}
           </button>
-          <select className="text-[10px] tracking-[0.18em] uppercase bg-transparent text-charcoal focus:outline-none">
-            <option>Mais recentes</option>
-            <option>Maior preço</option>
-            <option>Menor preço</option>
-            <option>Mais vendidos</option>
+          <select
+            value={sort}
+            onChange={(e) => { setSort(e.target.value); setVisible(PAGE_SIZE); }}
+            className="text-[10px] tracking-[0.18em] uppercase bg-transparent text-charcoal focus:outline-none cursor-pointer"
+          >
+            <option value="newest">Mais recentes</option>
+            <option value="price-high">Maior preço</option>
+            <option value="price-low">Menor preço</option>
+            <option value="bestseller">Mais vendidos</option>
           </select>
         </div>
+
+        {showFilters && (
+          <div className="border-t border-beige px-6 md:px-10 lg:px-14 py-4 flex flex-wrap gap-3">
+            <p className="text-[10px] tracking-[0.18em] uppercase text-warm-gray self-center mr-4">Coleção:</p>
+            {Array.from(new Set(products.map((p) => p.collection))).map((col) => (
+              <button key={col} className="text-[10px] tracking-[0.15em] uppercase border border-charcoal/15 px-4 py-1.5 hover:bg-charcoal hover:text-cream transition-colors text-charcoal">
+                {col}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <section className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-14 py-14 md:py-20">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {products.map((p, i) => (
+          {displayed.map((p, i) => (
             <Link key={p.id} to={`/produtos/${p.slug}`} className="group">
               <div className="relative aspect-[3/4] bg-beige overflow-hidden">
                 <div
@@ -85,11 +120,18 @@ export function CollectionPage() {
           ))}
         </div>
 
-        <div className="text-center mt-16">
-          <button className="public-cta">
-            Carregar mais <ArrowRight size={12} />
-          </button>
-        </div>
+        {hasMore && (
+          <div className="text-center mt-16">
+            <button className="public-cta" onClick={() => setVisible((v) => v + PAGE_SIZE)}>
+              Carregar mais <ArrowRight size={12} />
+            </button>
+          </div>
+        )}
+        {!hasMore && sorted.length > PAGE_SIZE && (
+          <p className="text-center mt-10 text-[11px] tracking-[0.15em] uppercase text-warm-gray">
+            Todos os {sorted.length} produtos exibidos
+          </p>
+        )}
       </section>
     </div>
   );

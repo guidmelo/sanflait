@@ -1,10 +1,44 @@
-import { Save, Bell, Lock, Globe, Palette, Database } from 'lucide-react';
+import { useState } from 'react';
+import { Save, Bell, Lock, Globe, Palette, Database, Check } from 'lucide-react';
 import { AdminTopBar } from '@/components/admin/AdminTopBar';
 import { Card } from '@/components/admin/Card';
 import { useAuth } from '@/stores/auth';
 
 export function SettingsPage() {
   const { user } = useAuth();
+
+  const [profileName, setProfileName] = useState(user?.name ?? '');
+  const [profileEmail, setProfileEmail] = useState(user?.email ?? '');
+  const [profileSaved, setProfileSaved] = useState(false);
+
+  const [passwords, setPasswords] = useState({ current: '', next: '', confirm: '' });
+  const [passwordMsg, setPasswordMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+
+  const [notifs, setNotifs] = useState({ email: true, push: false });
+
+  const handleProfileSave = () => {
+    setProfileSaved(true);
+    setTimeout(() => setProfileSaved(false), 2000);
+  };
+
+  const handlePasswordUpdate = () => {
+    if (!passwords.current) {
+      setPasswordMsg({ type: 'err', text: 'Informe a senha atual.' });
+      return;
+    }
+    if (passwords.next.length < 6) {
+      setPasswordMsg({ type: 'err', text: 'A nova senha deve ter ao menos 6 caracteres.' });
+      return;
+    }
+    if (passwords.next !== passwords.confirm) {
+      setPasswordMsg({ type: 'err', text: 'As senhas não coincidem.' });
+      return;
+    }
+    setPasswordMsg({ type: 'ok', text: 'Senha atualizada com sucesso.' });
+    setPasswords({ current: '', next: '', confirm: '' });
+    setTimeout(() => setPasswordMsg(null), 3000);
+  };
+
   return (
     <>
       <AdminTopBar title="Configurações" showLive={false} />
@@ -28,38 +62,58 @@ export function SettingsPage() {
 
               <div>
                 <label className="text-[10px] uppercase tracking-wider text-ink-text-3 mb-1 block">Nome</label>
-                <input className="admin-input w-full" defaultValue={user?.name} />
+                <input
+                  className="admin-input w-full"
+                  value={profileName}
+                  onChange={(e) => setProfileName(e.target.value)}
+                />
               </div>
               <div>
                 <label className="text-[10px] uppercase tracking-wider text-ink-text-3 mb-1 block">E-mail</label>
-                <input className="admin-input w-full" defaultValue={user?.email} />
+                <input
+                  className="admin-input w-full"
+                  value={profileEmail}
+                  onChange={(e) => setProfileEmail(e.target.value)}
+                />
               </div>
-              <button className="admin-button-primary"><Save size={11} /> Salvar alterações</button>
+              <button
+                onClick={handleProfileSave}
+                className={`admin-button-primary transition-all ${profileSaved ? 'bg-accent-green' : ''}`}
+              >
+                {profileSaved ? <><Check size={11} /> Salvo</> : <><Save size={11} /> Salvar alterações</>}
+              </button>
             </div>
           </Card>
 
           <Card title="Preferências" subtitle="Notificações, tema e idioma">
             <div className="space-y-3">
               {[
-                { icon: Bell, label: 'Notificações por e-mail', on: true },
-                { icon: Bell, label: 'Notificações push', on: false },
-                { icon: Palette, label: 'Tema escuro (admin)', on: true, locked: true },
-                { icon: Globe, label: 'Idioma · Português (BR)', on: true, locked: true },
-              ].map((opt, i) => (
-                <div key={i} className="flex items-center justify-between bg-ink-2 border border-line rounded p-3">
-                  <div className="flex items-center gap-2.5">
-                    <opt.icon size={13} className="text-ink-text-3" />
-                    <span className="text-[12px] text-ink-text-1">{opt.label}</span>
+                { key: 'email' as const, icon: Bell, label: 'Notificações por e-mail', locked: false },
+                { key: 'push' as const, icon: Bell, label: 'Notificações push', locked: false },
+                { key: null, icon: Palette, label: 'Tema escuro (admin)', locked: true, on: true },
+                { key: null, icon: Globe, label: 'Idioma · Português (BR)', locked: true, on: true },
+              ].map((opt, i) => {
+                const isOn = opt.key ? notifs[opt.key] : opt.on ?? false;
+                return (
+                  <div key={i} className="flex items-center justify-between bg-ink-2 border border-line rounded p-3">
+                    <div className="flex items-center gap-2.5">
+                      <opt.icon size={13} className="text-ink-text-3" />
+                      <span className="text-[12px] text-ink-text-1">{opt.label}</span>
+                    </div>
+                    <button
+                      disabled={opt.locked}
+                      onClick={() => opt.key && setNotifs((n) => ({ ...n, [opt.key!]: !n[opt.key!] }))}
+                      className={`relative w-9 h-5 rounded-full transition-colors ${isOn ? 'bg-accent-blue' : 'bg-ink-4'} ${opt.locked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                      aria-checked={isOn}
+                      role="switch"
+                    >
+                      <div
+                        className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${isOn ? 'translate-x-4' : 'translate-x-0.5'}`}
+                      />
+                    </button>
                   </div>
-                  <div
-                    className={`relative w-9 h-5 rounded-full transition-colors ${opt.on ? 'bg-accent-blue' : 'bg-ink-4'}`}
-                  >
-                    <div
-                      className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${opt.on ? 'translate-x-4' : 'translate-x-0.5'}`}
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Card>
 
@@ -67,17 +121,42 @@ export function SettingsPage() {
             <div className="space-y-3">
               <div>
                 <label className="text-[10px] uppercase tracking-wider text-ink-text-3 mb-1 block">Senha atual</label>
-                <input type="password" className="admin-input w-full" placeholder="••••••••" />
+                <input
+                  type="password"
+                  className="admin-input w-full"
+                  placeholder="••••••••"
+                  value={passwords.current}
+                  onChange={(e) => setPasswords({ ...passwords, current: e.target.value })}
+                />
               </div>
               <div>
                 <label className="text-[10px] uppercase tracking-wider text-ink-text-3 mb-1 block">Nova senha</label>
-                <input type="password" className="admin-input w-full" placeholder="••••••••" />
+                <input
+                  type="password"
+                  className="admin-input w-full"
+                  placeholder="••••••••"
+                  value={passwords.next}
+                  onChange={(e) => setPasswords({ ...passwords, next: e.target.value })}
+                />
               </div>
               <div>
                 <label className="text-[10px] uppercase tracking-wider text-ink-text-3 mb-1 block">Confirmar nova senha</label>
-                <input type="password" className="admin-input w-full" placeholder="••••••••" />
+                <input
+                  type="password"
+                  className="admin-input w-full"
+                  placeholder="••••••••"
+                  value={passwords.confirm}
+                  onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
+                />
               </div>
-              <button className="admin-button-primary"><Lock size={11} /> Atualizar senha</button>
+              {passwordMsg && (
+                <p className={`text-[11px] ${passwordMsg.type === 'ok' ? 'text-accent-green' : 'text-accent-red'}`}>
+                  {passwordMsg.text}
+                </p>
+              )}
+              <button className="admin-button-primary" onClick={handlePasswordUpdate}>
+                <Lock size={11} /> Atualizar senha
+              </button>
             </div>
           </Card>
 

@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, Heart, User, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { products } from '@/lib/mock';
 
 const NAV = [
   { label: 'Novidades', to: '/colecoes/novidades' },
@@ -13,7 +14,11 @@ const NAV = [
 export function PublicNav() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -23,7 +28,28 @@ export function PublicNav() {
 
   useEffect(() => {
     setMobileOpen(false);
+    setShowSearch(false);
+    setSearchQuery('');
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (showSearch) setTimeout(() => inputRef.current?.focus(), 50);
+  }, [showSearch]);
+
+  const searchResults = searchQuery.length > 1
+    ? products.filter((p) =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.collection.toLowerCase().includes(searchQuery.toLowerCase()),
+      ).slice(0, 5)
+    : [];
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchResults.length > 0) {
+      navigate(`/produtos/${searchResults[0].slug}`);
+      setShowSearch(false);
+    }
+  };
 
   return (
     <>
@@ -61,12 +87,59 @@ export function PublicNav() {
           </div>
 
           <div className="flex items-center gap-4 md:gap-5 text-charcoal">
-            <button aria-label="Buscar"><Search size={16} strokeWidth={1.25} /></button>
-            <button aria-label="Favoritos" className="hidden md:block"><Heart size={16} strokeWidth={1.25} /></button>
+            <button aria-label="Buscar" onClick={() => setShowSearch((v) => !v)}>
+              <Search size={16} strokeWidth={1.25} />
+            </button>
+            <button aria-label="Favoritos" className="hidden md:block">
+              <Heart size={16} strokeWidth={1.25} />
+            </button>
             <Link to="/login" aria-label="Conta"><User size={16} strokeWidth={1.25} /></Link>
           </div>
         </div>
       </nav>
+
+      {/* Search overlay */}
+      {showSearch && (
+        <div className="fixed inset-0 z-50 bg-cream/95 backdrop-blur-xl flex flex-col">
+          <div className="max-w-[1440px] mx-auto w-full px-6 md:px-10 lg:px-14 h-16 md:h-20 flex items-center gap-4">
+            <Search size={18} strokeWidth={1.25} className="text-warm-gray flex-shrink-0" />
+            <form onSubmit={handleSearchSubmit} className="flex-1">
+              <input
+                ref={inputRef}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar peças, coleções..."
+                className="w-full bg-transparent text-charcoal text-lg md:text-2xl font-serif font-light placeholder:text-warm-gray focus:outline-none"
+              />
+            </form>
+            <button onClick={() => setShowSearch(false)} aria-label="Fechar busca">
+              <X size={20} strokeWidth={1.25} className="text-charcoal" />
+            </button>
+          </div>
+          {searchResults.length > 0 && (
+            <div className="max-w-[1440px] mx-auto w-full px-6 md:px-10 lg:px-14 border-t border-beige mt-2">
+              {searchResults.map((p) => (
+                <Link
+                  key={p.id}
+                  to={`/produtos/${p.slug}`}
+                  className="flex items-center gap-4 py-4 border-b border-beige hover:text-gold transition-colors"
+                >
+                  <div className="w-10 h-14 bg-beige flex-shrink-0" />
+                  <div>
+                    <p className="font-serif text-base text-charcoal">{p.name}</p>
+                    <p className="text-[10px] tracking-[0.15em] uppercase text-warm-gray">{p.collection}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+          {searchQuery.length > 1 && searchResults.length === 0 && (
+            <p className="max-w-[1440px] mx-auto w-full px-6 md:px-10 lg:px-14 mt-8 text-[13px] text-warm-gray">
+              Nenhum resultado para "{searchQuery}"
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Mobile menu */}
       {mobileOpen && (

@@ -4,6 +4,7 @@ import { ArrowRight, Heart, MessageCircle, Truck, RefreshCw, Shield } from 'luci
 import { products } from '@/lib/mock';
 import { formatBRL } from '@/lib/utils';
 import { useTracking } from '@/stores/tracking';
+import { WHATSAPP_NUMBER } from '@/lib/constants';
 
 export function ProductPage() {
   const { slug } = useParams();
@@ -19,7 +20,7 @@ export function ProductPage() {
     const msg = vendorSlug
       ? `Olá! Vim pelo link do(a) vendedor(a) ${vendorSlug}. Tenho interesse em: ${product.name} (${selectedColor}, tamanho ${selectedSize}).`
       : `Olá! Tenho interesse no produto ${product.name} (${selectedColor}, tamanho ${selectedSize}).`;
-    window.open(`https://wa.me/5575999000000?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   return (

@@ -1,5 +1,6 @@
 import { MessageCircle } from 'lucide-react';
 import { useTracking } from '@/stores/tracking';
+import { WHATSAPP_NUMBER } from '@/lib/constants';
 
 export function WhatsAppFloat() {
   const { vendorSlug } = useTracking();
@@ -8,7 +9,7 @@ export function WhatsAppFloat() {
     const baseMsg = vendorSlug
       ? `Olá! Vim pelo link do(a) vendedor(a) ${vendorSlug}. Gostaria de conhecer as peças.`
       : 'Olá! Gostaria de conhecer as peças da Sanflait.';
-    const url = `https://wa.me/5575999000000?text=${encodeURIComponent(baseMsg)}`;
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(baseMsg)}`;
     window.open(url, '_blank', 'noopener');
   };
 

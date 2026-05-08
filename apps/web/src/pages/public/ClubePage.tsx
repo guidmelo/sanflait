@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Check, ArrowRight } from 'lucide-react';
 
 const BENEFITS = [
@@ -10,6 +11,15 @@ const BENEFITS = [
 ];
 
 export function ClubePage() {
+  const [form, setForm] = useState({ name: '', email: '', phone: '', neighborhood: '' });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name || !form.email) return;
+    setSubmitted(true);
+  };
+
   return (
     <div className="bg-cream">
       <section className="bg-charcoal text-cream relative py-24 md:py-32 overflow-hidden">
@@ -48,40 +58,68 @@ export function ClubePage() {
           </ul>
         </div>
 
-        <form className="bg-off-white p-8 md:p-10 self-start">
-          <p className="editorial-eyebrow mb-4">Cadastro</p>
-          <h3 className="font-serif text-2xl md:text-3xl font-light text-charcoal mb-6">
-            Solicite seu acesso
-          </h3>
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Nome completo"
-              className="w-full bg-transparent border-0 border-b border-charcoal/15 py-3 text-sm placeholder:text-warm-gray focus:outline-none focus:border-charcoal"
-            />
-            <input
-              type="email"
-              placeholder="E-mail"
-              className="w-full bg-transparent border-0 border-b border-charcoal/15 py-3 text-sm placeholder:text-warm-gray focus:outline-none focus:border-charcoal"
-            />
-            <input
-              type="tel"
-              placeholder="WhatsApp"
-              className="w-full bg-transparent border-0 border-b border-charcoal/15 py-3 text-sm placeholder:text-warm-gray focus:outline-none focus:border-charcoal"
-            />
-            <input
-              type="text"
-              placeholder="Bairro"
-              className="w-full bg-transparent border-0 border-b border-charcoal/15 py-3 text-sm placeholder:text-warm-gray focus:outline-none focus:border-charcoal"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full mt-8 bg-charcoal text-cream py-4 text-[10px] tracking-[0.22em] uppercase hover:bg-charcoal-deep transition-colors flex items-center justify-center gap-3"
-          >
-            Quero ser membro <ArrowRight size={12} />
-          </button>
-        </form>
+        <div className="bg-off-white p-8 md:p-10 self-start">
+          {submitted ? (
+            <div className="text-center py-8">
+              <div className="w-14 h-14 rounded-full bg-charcoal flex items-center justify-center mx-auto mb-5">
+                <Check size={24} strokeWidth={1.5} className="text-cream" />
+              </div>
+              <p className="editorial-eyebrow mb-3">Solicitação enviada</p>
+              <h3 className="font-serif text-2xl font-light text-charcoal mb-4">
+                Bem-vinda ao Clube!
+              </h3>
+              <p className="text-[13px] leading-[1.8] text-warm-gray">
+                Nossa equipe entrará em contato em até 24h para confirmar seu acesso.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <p className="editorial-eyebrow mb-4">Cadastro</p>
+              <h3 className="font-serif text-2xl md:text-3xl font-light text-charcoal mb-6">
+                Solicite seu acesso
+              </h3>
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Nome completo"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                  className="w-full bg-transparent border-0 border-b border-charcoal/15 py-3 text-sm placeholder:text-warm-gray focus:outline-none focus:border-charcoal"
+                />
+                <input
+                  type="email"
+                  placeholder="E-mail"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  required
+                  className="w-full bg-transparent border-0 border-b border-charcoal/15 py-3 text-sm placeholder:text-warm-gray focus:outline-none focus:border-charcoal"
+                />
+                <input
+                  type="tel"
+                  placeholder="WhatsApp"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  className="w-full bg-transparent border-0 border-b border-charcoal/15 py-3 text-sm placeholder:text-warm-gray focus:outline-none focus:border-charcoal"
+                />
+                <input
+                  type="text"
+                  placeholder="Bairro"
+                  value={form.neighborhood}
+                  onChange={(e) => setForm({ ...form, neighborhood: e.target.value })}
+                  className="w-full bg-transparent border-0 border-b border-charcoal/15 py-3 text-sm placeholder:text-warm-gray focus:outline-none focus:border-charcoal"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={!form.name || !form.email}
+                className="w-full mt-8 bg-charcoal text-cream py-4 text-[10px] tracking-[0.22em] uppercase hover:bg-charcoal-deep transition-colors flex items-center justify-center gap-3 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Quero ser membro <ArrowRight size={12} />
+              </button>
+            </form>
+          )}
+        </div>
       </section>
     </div>
   );
