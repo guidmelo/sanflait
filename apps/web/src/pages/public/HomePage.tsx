@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Navigation } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { products, stores } from '@/lib/mock';
+import { stores } from '@/lib/mock';
 import { formatBRL } from '@/lib/utils';
+import { useProducts } from '@/hooks/useProducts';
 
 const COLLECTIONS = [
   { slug: 'novidades', label: 'Novidades' },
@@ -14,6 +15,7 @@ const COLLECTIONS = [
 ];
 
 export function HomePage() {
+  const { data: products = [] } = useProducts();
   return (
     <div className="-mt-16 md:-mt-20">
       {/* HERO */}
@@ -141,14 +143,21 @@ export function HomePage() {
         </div>
 
         <div className="md:col-span-7 grid grid-cols-2 gap-4 md:gap-6">
-          {products.slice(0, 4).map((p, i) => (
+          {products.length === 0 ? (
+            <div className="col-span-2 py-20 text-center text-warm-gray text-[13px] tracking-[0.1em]">
+              Coleção em breve
+            </div>
+          ) : products.slice(0, 4).map((p, i) => (
             <Link
               key={p.id}
               to={`/produtos/${p.slug}`}
               className={`group ${i === 1 ? 'mt-12 md:mt-20' : ''} ${i === 3 ? 'mt-6 md:mt-12' : ''}`}
             >
               <div className="relative aspect-[3/4] bg-beige overflow-hidden">
-                <ProductPlaceholder index={i} />
+                {p.images?.[0]
+                  ? <img src={p.images[0]} alt={p.name} className="absolute inset-0 w-full h-full object-cover" />
+                  : <ProductPlaceholder index={i} />
+                }
                 {p.badge && (
                   <span className="absolute top-3 left-3 bg-charcoal text-cream text-[8px] tracking-[0.18em] uppercase px-2 py-1">
                     {p.badge}
@@ -235,34 +244,43 @@ export function HomePage() {
             Ver todos <ArrowRight size={12} />
           </Link>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {products.map((p, i) => (
-            <Link key={p.id} to={`/produtos/${p.slug}`} className="group">
-              <div className="relative aspect-[3/4] bg-beige overflow-hidden">
-                <ProductPlaceholder index={i} />
-                {p.badge && (
-                  <span className="absolute top-3 left-3 bg-charcoal text-cream text-[8px] tracking-[0.18em] uppercase px-2 py-1">
-                    {p.badge}
-                  </span>
-                )}
-              </div>
-              <div className="mt-3">
-                <p className="text-[9px] tracking-[0.18em] uppercase text-warm-gray mb-0.5">
-                  {p.category}
-                </p>
-                <p className="font-serif text-[15px] text-charcoal mb-1 group-hover:text-gold transition-colors">
-                  {p.name}
-                </p>
-                <p className="text-[12px] text-warm-gray">
-                  {p.oldPrice && (
-                    <span className="line-through mr-2 text-sand">{formatBRL(p.oldPrice)}</span>
+        {products.length === 0 ? (
+          <p className="text-center text-warm-gray text-[13px] py-12 tracking-[0.1em]">
+            Em breve — novidades chegando
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {products.map((p, i) => (
+              <Link key={p.id} to={`/produtos/${p.slug}`} className="group">
+                <div className="relative aspect-[3/4] bg-beige overflow-hidden">
+                  {p.images?.[0]
+                    ? <img src={p.images[0]} alt={p.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    : <ProductPlaceholder index={i} />
+                  }
+                  {p.badge && (
+                    <span className="absolute top-3 left-3 bg-charcoal text-cream text-[8px] tracking-[0.18em] uppercase px-2 py-1">
+                      {p.badge}
+                    </span>
                   )}
-                  {formatBRL(p.price)}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
+                </div>
+                <div className="mt-3">
+                  <p className="text-[9px] tracking-[0.18em] uppercase text-warm-gray mb-0.5">
+                    {p.category}
+                  </p>
+                  <p className="font-serif text-[15px] text-charcoal mb-1 group-hover:text-gold transition-colors">
+                    {p.name}
+                  </p>
+                  <p className="text-[12px] text-warm-gray">
+                    {p.oldPrice && (
+                      <span className="line-through mr-2 text-sand">{formatBRL(p.oldPrice)}</span>
+                    )}
+                    {formatBRL(p.price)}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* STORES TEASER */}

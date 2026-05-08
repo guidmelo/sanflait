@@ -4,7 +4,20 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const corsOrigins = [
+    'http://localhost:5173',
+    'http://localhost:4173',
+    process.env.CORS_ORIGIN,
+    /\.vercel\.app$/,
+  ].filter(Boolean);
+
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: corsOrigins,
+      credentials: true,
+      methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    },
+  });
 
   app.setGlobalPrefix('api');
   app.useGlobalPipes(

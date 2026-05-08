@@ -1,27 +1,48 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth, demoUsers } from '@/stores/auth';
 import { SanflaitLogo } from '@/components/public/SanflaitLogo';
+import api from '@/lib/api';
 
 export function LoginPage() {
   const [email, setEmail] = useState('guilherme');
   const [password, setPassword] = useState('guilherme');
   const [showPwd, setShowPwd] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
+
+    // Try real API first when configured
+    if (import.meta.env.VITE_API_URL) {
+      try {
+        const { data } = await api.post('/auth/login', { email, password });
+        login(data.user, data.accessToken);
+        navigate('/app/dashboard');
+        return;
+      } catch {
+        // fall through to demo users
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // Demo mode fallback
     const demo = demoUsers[email];
     if (demo && demo.password === password) {
-      login(demo.user, 'demo-jwt-token');
+      login(demo.user, `demo-${email}`);
       navigate('/app/dashboard');
+      setLoading(false);
       return;
     }
-    setError('Credenciais inválidas. Use os perfis demo: guilherme / amanda / josy / monique / gildson / teresa.');
+    setError('Credenciais inválidas.');
+    setLoading(false);
   };
 
   return (
@@ -109,9 +130,11 @@ export function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-accent-blue text-white py-3 rounded text-[13px] font-medium hover:opacity-90 transition flex items-center justify-center gap-2"
+              disabled={loading}
+              className="w-full bg-accent-blue text-white py-3 rounded text-[13px] font-medium hover:opacity-90 transition flex items-center justify-center gap-2 disabled:opacity-60"
             >
-              Entrar <ArrowRight size={14} />
+              {loading ? <Loader2 size={14} className="animate-spin" /> : <ArrowRight size={14} />}
+              {loading ? 'Autenticando...' : 'Entrar'}
             </button>
           </form>
 

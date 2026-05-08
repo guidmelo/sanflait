@@ -1,11 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import {
-  vendors as seedVendors,
-  customers as seedCustomers,
-  sales as seedSales,
-  stores as seedStores,
-  products as seedProducts,
   type Vendor,
   type Customer,
   type Sale,
@@ -43,11 +38,11 @@ interface DataState {
 export const useData = create<DataState>()(
   persist(
     (set) => ({
-      vendors: seedVendors,
-      customers: seedCustomers,
-      sales: seedSales,
-      stores: seedStores,
-      products: seedProducts,
+      vendors: [],
+      customers: [],
+      sales: [],
+      stores: [],
+      products: [],
 
       addVendor: (v) => set((s) => ({ vendors: [...s.vendors, v] })),
       updateVendor: (id, u) =>
@@ -77,6 +72,6 @@ export const useData = create<DataState>()(
       removeProduct: (id) =>
         set((s) => ({ products: s.products.filter((p) => p.id !== id) })),
     }),
-    { name: 'sanflait-data' },
+    { name: 'sanflait-data-v2' },
   ),
 );
