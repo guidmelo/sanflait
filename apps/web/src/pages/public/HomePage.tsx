@@ -23,7 +23,7 @@ export function HomePage() {
           className="absolute inset-0 opacity-95"
           style={{
             background:
-              'radial-gradient(ellipse at 30% 20%, #2a2620 0%, transparent 55%), radial-gradient(ellipse at 80% 90%, #1a1710 0%, transparent 60%), linear-gradient(180deg, #0d0d0b 0%, #1a1916 100%)',
+              'radial-gradient(ellipse at 30% 20%, #1A5235 0%, transparent 55%), radial-gradient(ellipse at 80% 90%, #0A2E1C 0%, transparent 60%), linear-gradient(180deg, #061E14 0%, #0D3829 100%)',
           }}
         />
         <div
@@ -43,8 +43,8 @@ export function HomePage() {
         >
           <defs>
             <linearGradient id="figGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#D4C9B8" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#D4C9B8" stopOpacity="0.05" />
+              <stop offset="0%" stopColor="#9ABFB0" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#9ABFB0" stopOpacity="0.05" />
             </linearGradient>
           </defs>
           <ellipse cx="300" cy="200" rx="60" ry="80" fill="url(#figGrad)" />
@@ -183,7 +183,7 @@ export function HomePage() {
           className="absolute inset-0 opacity-90"
           style={{
             background:
-              'radial-gradient(ellipse at 70% 30%, #2a2620 0%, transparent 55%), linear-gradient(180deg, #1a1916 0%, #0d0d0b 100%)',
+              'radial-gradient(ellipse at 70% 30%, #1A5235 0%, transparent 55%), linear-gradient(180deg, #0D3829 0%, #061E14 100%)',
           }}
         />
         <div className="relative max-w-[1440px] mx-auto px-6 md:px-10 lg:px-14 py-24 md:py-32 grid md:grid-cols-2 gap-12 items-center">
@@ -209,7 +209,7 @@ export function HomePage() {
               className="absolute inset-0"
               style={{
                 background:
-                  'radial-gradient(ellipse at 50% 30%, #D4C9B8 0%, #8A8278 40%, #1A1916 100%)',
+                  'radial-gradient(ellipse at 50% 30%, #9ABFB0 0%, #3A5E4E 40%, #0D3829 100%)',
                 opacity: 0.45,
               }}
             />
@@ -294,8 +294,8 @@ export function HomePage() {
                     className="absolute inset-0"
                     style={{
                       background: i === 0
-                        ? 'radial-gradient(circle at 30% 60%, #D4C9B8 0%, #8A8278 100%)'
-                        : 'radial-gradient(circle at 70% 40%, #E8E0D5 0%, #1A1916 100%)',
+                        ? 'radial-gradient(circle at 30% 60%, #9ABFB0 0%, #3A5E4E 100%)'
+                        : 'radial-gradient(circle at 70% 40%, #D4E8DD 0%, #0D3829 100%)',
                       opacity: 0.7,
                     }}
                   />
@@ -369,12 +369,12 @@ export function HomePage() {
 // Stylized SVG product placeholder — generates a unique abstract image per product
 function ProductPlaceholder({ index }: { index: number }) {
   const palettes = [
-    { bg: '#E8E0D5', mid: '#D4C9B8', dark: '#8A8278' },
-    { bg: '#F5F2EE', mid: '#E8E0D5', dark: '#1A1916' },
-    { bg: '#1A1916', mid: '#8A8278', dark: '#D4C9B8' },
-    { bg: '#D4C9B8', mid: '#E8E0D5', dark: '#1A1916' },
-    { bg: '#E8E0D5', mid: '#FAF8F4', dark: '#B8973A' },
-    { bg: '#F5F2EE', mid: '#D4C9B8', dark: '#8A8278' },
+    { bg: '#D4E8DD', mid: '#9ABFB0', dark: '#3A5E4E' },
+    { bg: '#F4F9F6', mid: '#D4E8DD', dark: '#0D3829' },
+    { bg: '#0D3829', mid: '#3A5E4E', dark: '#9ABFB0' },
+    { bg: '#9ABFB0', mid: '#D4E8DD', dark: '#0D3829' },
+    { bg: '#D4E8DD', mid: '#F4F9F6', dark: '#C4A040' },
+    { bg: '#F4F9F6', mid: '#9ABFB0', dark: '#3A5E4E' },
   ];
   const p = palettes[index % palettes.length];
   return (

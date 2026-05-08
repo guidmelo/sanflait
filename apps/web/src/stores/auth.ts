@@ -33,22 +33,30 @@ export const useAuth = create<AuthState>()(
   ),
 );
 
-// Demo users for instant login (substitute by real API auth)
+// Usuários do sistema Sanflait
 export const demoUsers: Record<string, { user: AuthUser; password: string }> = {
-  admin: {
-    password: 'admin',
-    user: { id: 'u1', name: 'Camila Sanflait', email: 'admin@sanflait.com', role: 'ADMIN', initials: 'CS', avatarColor: '#8B5CF6' },
+  guilherme: {
+    password: 'guilherme',
+    user: { id: 'u1', name: 'Guilherme T.I', email: 'guilherme@sanflait.com', role: 'ADMIN', initials: 'GT', avatarColor: '#C4A040' },
   },
-  gerente: {
-    password: 'gerente',
-    user: { id: 'u2', name: 'Rafael Costa', email: 'gerente@sanflait.com', role: 'GERENTE', initials: 'RC', avatarColor: '#14B8A6' },
+  amanda: {
+    password: 'amanda',
+    user: { id: 'u2', name: 'Amanda', email: 'amanda@sanflait.com', role: 'GERENTE', initials: 'AM', avatarColor: '#0D3829' },
   },
-  vendedor: {
-    password: 'vendedor',
-    user: { id: 'u3', name: 'Guilherme Melo', email: 'guilherme@sanflait.com', role: 'VENDEDOR', initials: 'GM', avatarColor: '#3B82F6' },
+  josy: {
+    password: 'josy',
+    user: { id: 'u3', name: 'Josy', email: 'josy@sanflait.com', role: 'GERENTE', initials: 'JO', avatarColor: '#3B82F6' },
   },
-  suporte: {
-    password: 'suporte',
-    user: { id: 'u4', name: 'Bruno Alves', email: 'suporte@sanflait.com', role: 'SUPORTE', initials: 'BA', avatarColor: '#F59E0B' },
+  monique: {
+    password: 'monique',
+    user: { id: 'u4', name: 'Monique', email: 'monique@sanflait.com', role: 'GERENTE', initials: 'MO', avatarColor: '#8B5CF6' },
+  },
+  gildson: {
+    password: 'gildson',
+    user: { id: 'u5', name: 'Gildson', email: 'gildson@sanflait.com', role: 'VENDEDOR', initials: 'GI', avatarColor: '#14B8A6' },
+  },
+  teresa: {
+    password: 'teresa',
+    user: { id: 'u6', name: 'Teresa', email: 'teresa@sanflait.com', role: 'VENDEDOR', initials: 'TE', avatarColor: '#F59E0B' },
   },
 };

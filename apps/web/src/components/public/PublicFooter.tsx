@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, MessageCircle } from 'lucide-react';
 import { INSTAGRAM_URL, FACEBOOK_URL, WHATSAPP_URL } from '@/lib/constants';
+import { SanflaitLogo } from '@/components/public/SanflaitLogo';
 
 const FOOTER_LINKS = [
   { label: 'Novidades', to: '/colecoes/novidades' },
@@ -61,8 +62,8 @@ export function PublicFooter() {
 
         {/* Logo + Links */}
         <div className="text-center mb-10">
-          <Link to="/" className="font-serif text-3xl md:text-4xl tracking-[0.2em] font-light text-charcoal">
-            SANFLAIT
+          <Link to="/" className="inline-block text-charcoal text-3xl md:text-4xl hover:text-gold transition-colors" aria-label="Sanflait">
+            <SanflaitLogo />
           </Link>
         </div>
 

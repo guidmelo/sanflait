@@ -7,21 +7,22 @@ export default {
     extend: {
       colors: {
         // ============================================
-        // PUBLIC SITE — Foxton-inspired editorial palette
+        // PUBLIC SITE — Sanflait brand palette
+        // Verde escuro + Dourado · preto e branco como contraste
         // ============================================
-        cream: '#FAF8F4',
-        'off-white': '#F5F2EE',
-        beige: '#E8E0D5',
-        sand: '#D4C9B8',
-        charcoal: '#1A1916',
-        'charcoal-deep': '#0D0D0B',
-        gold: '#B8973A',
-        'gold-soft': '#C9A85A',
-        'warm-gray': '#8A8278',
-        'warm-gray-light': '#A39C92',
+        cream: '#FFFFFF',
+        'off-white': '#F4F9F6',
+        beige: '#D4E8DD',
+        sand: '#EEEEEE',
+        charcoal: '#0D3829',
+        'charcoal-deep': '#061E14',
+        gold: '#C4A040',
+        'gold-soft': '#D4B250',
+        'warm-gray': '#2A3E35',
+        'warm-gray-light': '#8CA898',
 
         // ============================================
-        // ADMIN — Dark Power BI palette
+        // ADMIN — Dark Power BI palette (inalterado)
         // ============================================
         ink: {
           0: '#0E0E10',

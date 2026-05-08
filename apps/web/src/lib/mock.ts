@@ -152,104 +152,49 @@ export const products: Product[] = [
 export const stores: Store[] = [
   {
     id: 's1',
-    name: 'Sanflait Centro',
-    address: 'Rua Principal, 120 — Centro',
+    name: 'Sanflait Loja 1',
+    address: 'A definir',
     city: 'Paulo Afonso, BA',
-    hours: 'Seg–Sáb 9h–19h',
+    hours: 'A definir',
     mapsUrl: '#',
     wazeUrl: '#',
-    description: 'Nossa loja principal no coração de Paulo Afonso.',
+    description: 'Unidade 1 da Sanflait.',
   },
   {
     id: 's2',
-    name: 'Sanflait Mall',
-    address: 'Shopping Avenida, Loja 42',
+    name: 'Sanflait Loja 2',
+    address: 'A definir',
     city: 'Paulo Afonso, BA',
-    hours: 'Diário 10h–22h',
+    hours: 'A definir',
     mapsUrl: '#',
     wazeUrl: '#',
-    description: 'Atendimento estendido todos os dias da semana.',
+    description: 'Unidade 2 da Sanflait.',
+  },
+  {
+    id: 's3',
+    name: 'Sanflait Loja 3',
+    address: 'A definir',
+    city: 'Paulo Afonso, BA',
+    hours: 'A definir',
+    mapsUrl: '#',
+    wazeUrl: '#',
+    description: 'Unidade 3 da Sanflait.',
   },
 ];
 
-export const vendors: Vendor[] = [
-  {
-    id: 'v1',
-    slug: 'guilherme-melo',
-    name: 'Guilherme Melo',
-    email: 'guilherme@sanflait.com',
-    phone: '(75) 99000-0001',
-    avatar: 'GM',
-    storeId: 's1',
-    initials: 'GM',
-    color: '#8B5CF6',
-    metrics: { sales: 92, revenue: 22400, conversion: 11.4, leads: 240 },
-  },
-  {
-    id: 'v2',
-    slug: 'ana-silva',
-    name: 'Ana Silva',
-    email: 'ana@sanflait.com',
-    phone: '(75) 99000-0002',
-    avatar: 'AS',
-    storeId: 's1',
-    initials: 'AS',
-    color: '#14B8A6',
-    metrics: { sales: 74, revenue: 18100, conversion: 9.8, leads: 195 },
-  },
-  {
-    id: 'v3',
-    slug: 'carlos-rocha',
-    name: 'Carlos Rocha',
-    email: 'carlos@sanflait.com',
-    phone: '(75) 99000-0003',
-    avatar: 'CR',
-    storeId: 's2',
-    initials: 'CR',
-    color: '#F59E0B',
-    metrics: { sales: 60, revenue: 14600, conversion: 8.1, leads: 168 },
-  },
-  {
-    id: 'v4',
-    slug: 'mariana-fontes',
-    name: 'Mariana Fontes',
-    email: 'mariana@sanflait.com',
-    phone: '(75) 99000-0004',
-    avatar: 'MF',
-    storeId: 's2',
-    initials: 'MF',
-    color: '#3B82F6',
-    metrics: { sales: 46, revenue: 11100, conversion: 7.2, leads: 142 },
-  },
-];
+export const vendors: Vendor[] = [];
 
-export const customers: Customer[] = [
-  { id: 'c1', name: 'Juliana Andrade', phone: '(75) 98800-1010', email: 'juliana@email.com', neighborhood: 'Centro', age: 32, gender: 'FEMININO', status: 'CONVERTIDO', source: 'WhatsApp', vendorId: 'v1', createdAt: '2026-05-04T14:30:00Z' },
-  { id: 'c2', name: 'Pedro Costa', phone: '(75) 98800-1011', email: 'pedro@email.com', neighborhood: 'Tancredo', age: 41, gender: 'MASCULINO', status: 'EM_NEGOCIACAO', source: 'Instagram', vendorId: 'v2', createdAt: '2026-05-05T10:12:00Z' },
-  { id: 'c3', name: 'Beatriz Lima', phone: '(75) 98800-1012', email: 'beatriz@email.com', neighborhood: 'Vila Matias', age: 28, gender: 'FEMININO', status: 'LEAD', source: 'Link Vendedor', vendorId: 'v1', createdAt: '2026-05-05T15:00:00Z' },
-  { id: 'c4', name: 'Ricardo Souza', phone: '(75) 98800-1013', email: 'ricardo@email.com', neighborhood: 'Centro', age: 35, gender: 'MASCULINO', status: 'CONVERTIDO', source: 'Orgânico', vendorId: 'v3', createdAt: '2026-05-03T09:20:00Z' },
-  { id: 'c5', name: 'Fernanda Cruz', phone: '(75) 98800-1014', email: 'fernanda@email.com', neighborhood: 'BTN', age: 39, gender: 'FEMININO', status: 'PERDIDO', source: 'WhatsApp', vendorId: 'v4', createdAt: '2026-05-02T17:45:00Z' },
-  { id: 'c6', name: 'Lucas Vieira', phone: '(75) 98800-1015', email: 'lucas@email.com', neighborhood: 'Tancredo', age: 26, gender: 'MASCULINO', status: 'EM_NEGOCIACAO', source: 'Instagram', vendorId: 'v2', createdAt: '2026-05-05T18:30:00Z' },
-  { id: 'c7', name: 'Camila Pinto', phone: '(75) 98800-1016', email: 'camila@email.com', neighborhood: 'Vila Matias', age: 31, gender: 'FEMININO', status: 'LEAD', source: 'WhatsApp', vendorId: 'v1', createdAt: '2026-05-06T08:10:00Z' },
-  { id: 'c8', name: 'Marcos Aurélio', phone: '(75) 98800-1017', email: 'marcos@email.com', neighborhood: 'Centro', age: 45, gender: 'MASCULINO', status: 'CONVERTIDO', source: 'Link Vendedor', vendorId: 'v3', createdAt: '2026-05-04T11:00:00Z' },
-];
+export const customers: Customer[] = [];
 
-export const sales: Sale[] = [
-  { id: 'sale1', customerId: 'c1', customerName: 'Juliana Andrade', vendorId: 'v1', vendorName: 'Guilherme Melo', amount: 419, description: 'Vestido Midi Linen', channel: 'WhatsApp', status: 'CONVERTIDO', createdAt: '2026-05-04T15:00:00Z' },
-  { id: 'sale2', customerId: 'c4', customerName: 'Ricardo Souza', vendorId: 'v3', vendorName: 'Carlos Rocha', amount: 890, description: 'Kit 3 Peças Casual', channel: 'Loja Física', status: 'CONVERTIDO', createdAt: '2026-05-03T11:00:00Z' },
-  { id: 'sale3', customerId: 'c2', customerName: 'Pedro Costa', vendorId: 'v2', vendorName: 'Ana Silva', amount: 589, description: 'Blazer Premium', channel: 'WhatsApp', status: 'EM_NEGOCIACAO', createdAt: '2026-05-05T10:30:00Z' },
-  { id: 'sale4', customerId: 'c8', customerName: 'Marcos Aurélio', vendorId: 'v3', vendorName: 'Carlos Rocha', amount: 1289, description: 'Sobretudo Lã Virgem', channel: 'Link Vendedor', status: 'CONVERTIDO', createdAt: '2026-05-04T13:00:00Z' },
-  { id: 'sale5', customerId: 'c5', customerName: 'Fernanda Cruz', vendorId: 'v4', vendorName: 'Mariana Fontes', amount: 369, description: 'Calça Alfaiataria', channel: 'WhatsApp', status: 'PERDIDO', createdAt: '2026-05-02T18:00:00Z' },
-  { id: 'sale6', customerId: 'c1', customerName: 'Juliana Andrade', vendorId: 'v1', vendorName: 'Guilherme Melo', amount: 289, description: 'Blusa Seda Pura', channel: 'Loja Física', status: 'CONVERTIDO', createdAt: '2026-05-06T09:00:00Z' },
-];
+export const sales: Sale[] = [];
 
 // Time series for charts
 export const monthlyRevenue = [
-  { month: 'Jan', value: 52000 },
-  { month: 'Fev', value: 61000 },
-  { month: 'Mar', value: 58000 },
-  { month: 'Abr', value: 73000 },
-  { month: 'Mai', value: 84200 },
+  { month: 'Jan', value: 0 },
+  { month: 'Fev', value: 0 },
+  { month: 'Mar', value: 0 },
+  { month: 'Abr', value: 0 },
+  { month: 'Mai', value: 0 },
 ];
 
 export const dailyTraffic = Array.from({ length: 14 }, (_, i) => ({

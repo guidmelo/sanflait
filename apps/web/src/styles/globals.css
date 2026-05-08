@@ -12,7 +12,7 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
-  ::selection { background: #1A1916; color: #FAF8F4; }
+  ::selection { background: #0D3829; color: #FFFFFF; }
 }
 
 @layer components {

@@ -50,10 +50,10 @@ export function ProductPage() {
                     className="absolute inset-0"
                     style={{
                       background: [
-                        'radial-gradient(circle at 50% 30%, #E8E0D5, #8A8278)',
-                        'radial-gradient(circle at 30% 60%, #FAF8F4, #D4C9B8)',
-                        'radial-gradient(circle at 70% 40%, #1A1916, #8A8278)',
-                        'radial-gradient(circle at 50% 50%, #D4C9B8, #FAF8F4)',
+                        'radial-gradient(circle at 50% 30%, #D4E8DD, #3A5E4E)',
+                        'radial-gradient(circle at 30% 60%, #F4F9F6, #9ABFB0)',
+                        'radial-gradient(circle at 70% 40%, #0D3829, #3A5E4E)',
+                        'radial-gradient(circle at 50% 50%, #9ABFB0, #F4F9F6)',
                       ][i],
                       opacity: 0.75,
                     }}
@@ -191,10 +191,10 @@ export function ProductPage() {
                       className="absolute inset-0"
                       style={{
                         background: [
-                          'radial-gradient(circle at 50% 30%, #E8E0D5, #8A8278)',
-                          'radial-gradient(circle at 30% 60%, #FAF8F4, #D4C9B8)',
-                          'radial-gradient(circle at 70% 40%, #1A1916, #8A8278)',
-                          'radial-gradient(circle at 50% 50%, #D4C9B8, #FAF8F4)',
+                          'radial-gradient(circle at 50% 30%, #D4E8DD, #3A5E4E)',
+                          'radial-gradient(circle at 30% 60%, #F4F9F6, #9ABFB0)',
+                          'radial-gradient(circle at 70% 40%, #0D3829, #3A5E4E)',
+                          'radial-gradient(circle at 50% 50%, #9ABFB0, #F4F9F6)',
                         ][i],
                         opacity: 0.7,
                       }}

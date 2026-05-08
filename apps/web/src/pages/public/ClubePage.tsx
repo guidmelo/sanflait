@@ -27,7 +27,7 @@ export function ClubePage() {
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at 30% 30%, #2a2620 0%, transparent 60%), linear-gradient(180deg, #1a1916 0%, #0d0d0b 100%)',
+              'radial-gradient(ellipse at 30% 30%, #1A5235 0%, transparent 60%), linear-gradient(180deg, #0D3829 0%, #061E14 100%)',
           }}
         />
         <div className="relative max-w-[1440px] mx-auto px-6 md:px-10 lg:px-14 text-center">

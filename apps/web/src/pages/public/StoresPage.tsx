@@ -10,7 +10,7 @@ export function StoresPage() {
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at 80% 20%, #2a2620 0%, transparent 60%), linear-gradient(180deg, #1a1916 0%, #0d0d0b 100%)',
+              'radial-gradient(ellipse at 80% 20%, #1A5235 0%, transparent 60%), linear-gradient(180deg, #0D3829 0%, #061E14 100%)',
           }}
         />
         <div className="relative max-w-[1440px] mx-auto px-6 md:px-10 lg:px-14">
@@ -39,8 +39,8 @@ export function StoresPage() {
                   style={{
                     background:
                       i === 0
-                        ? 'radial-gradient(circle at 30% 60%, #D4C9B8 0%, #8A8278 100%)'
-                        : 'radial-gradient(circle at 70% 40%, #E8E0D5 0%, #1A1916 100%)',
+                        ? 'radial-gradient(circle at 30% 60%, #9ABFB0 0%, #3A5E4E 100%)'
+                        : 'radial-gradient(circle at 70% 40%, #D4E8DD 0%, #0D3829 100%)',
                     opacity: 0.75,
                   }}
                 />

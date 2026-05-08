@@ -4,8 +4,8 @@ import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useAuth, demoUsers } from '@/stores/auth';
 
 export function LoginPage() {
-  const [email, setEmail] = useState('admin');
-  const [password, setPassword] = useState('admin');
+  const [email, setEmail] = useState('guilherme');
+  const [password, setPassword] = useState('guilherme');
   const [showPwd, setShowPwd] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export function LoginPage() {
       navigate('/app/dashboard');
       return;
     }
-    setError('Credenciais inválidas. Use os perfis demo (admin / gerente / vendedor / suporte).');
+    setError('Credenciais inválidas. Use os perfis demo: guilherme / amanda / josy / monique / gildson / teresa.');
   };
 
   return (
@@ -31,7 +31,7 @@ export function LoginPage() {
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at 30% 30%, #2a2620 0%, transparent 60%), linear-gradient(180deg, #1a1916 0%, #0d0d0b 100%)',
+              'radial-gradient(ellipse at 30% 30%, #1A5235 0%, transparent 60%), linear-gradient(180deg, #0D3829 0%, #061E14 100%)',
           }}
         />
         <div className="relative z-10 p-12 lg:p-16 flex flex-col justify-between w-full">
