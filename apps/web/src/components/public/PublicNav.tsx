@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, Heart, User, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { products } from '@/lib/mock';
+import { SanflaitLogo } from '@/components/public/SanflaitLogo';
 
 const NAV = [
   { label: 'Novidades', to: '/colecoes/novidades' },
@@ -70,8 +71,8 @@ export function PublicNav() {
             <Menu size={20} strokeWidth={1.25} />
           </button>
 
-          <Link to="/" className="font-serif text-lg md:text-2xl tracking-[0.18em] font-light text-charcoal">
-            SANFLAIT
+          <Link to="/" className="text-charcoal" aria-label="Sanflait">
+            <SanflaitLogo className="text-lg md:text-2xl" />
           </Link>
 
           <div className="hidden md:flex items-center gap-7 lg:gap-10">
@@ -145,7 +146,7 @@ export function PublicNav() {
       {mobileOpen && (
         <div className="fixed inset-0 z-50 bg-cream md:hidden animate-fade-in">
           <div className="px-6 h-16 flex items-center justify-between border-b border-beige">
-            <span className="font-serif text-lg tracking-[0.18em] text-charcoal">SANFLAIT</span>
+            <SanflaitLogo className="text-lg text-charcoal" />
             <button onClick={() => setMobileOpen(false)} aria-label="Fechar"><X size={20} strokeWidth={1.25} /></button>
           </div>
           <div className="p-6 flex flex-col gap-6">

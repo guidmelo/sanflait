@@ -3,7 +3,16 @@ import { formatCompact } from '@/lib/utils';
 
 export function VendorRanking() {
   const sorted = [...vendors].sort((a, b) => b.metrics.revenue - a.metrics.revenue);
-  const max = sorted[0].metrics.revenue;
+
+  if (sorted.length === 0) {
+    return (
+      <p className="text-[11px] text-ink-text-3 text-center py-6">
+        Nenhum vendedor cadastrado ainda.
+      </p>
+    );
+  }
+
+  const max = sorted[0].metrics.revenue || 1;
 
   return (
     <div>

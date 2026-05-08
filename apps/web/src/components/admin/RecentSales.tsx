@@ -21,6 +21,14 @@ const PRICE_COLOR = {
 };
 
 export function RecentSales() {
+  if (sales.length === 0) {
+    return (
+      <p className="text-[11px] text-ink-text-3 text-center py-6">
+        Nenhuma venda registrada ainda.
+      </p>
+    );
+  }
+
   return (
     <div className="space-y-1.5">
       {sales.slice(0, 5).map((s) => (

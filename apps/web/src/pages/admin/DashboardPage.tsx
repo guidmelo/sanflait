@@ -9,24 +9,55 @@ import { SalesFunnel } from '@/components/admin/SalesFunnel';
 import { RecentSales } from '@/components/admin/RecentSales';
 import { TrafficChart } from '@/components/admin/TrafficChart';
 import { useAuth } from '@/stores/auth';
+import { sales, customers } from '@/lib/mock';
+import { formatBRL } from '@/lib/utils';
 
 export function DashboardPage() {
   const { user } = useAuth();
   const isVendedor = user?.role === 'VENDEDOR';
 
+  const convertedSales = sales.filter((s) => s.status === 'CONVERTIDO');
+  const totalRevenue = convertedSales.reduce((sum, s) => sum + s.amount, 0);
+  const totalSalesCount = convertedSales.length;
+  const avgTicket = totalSalesCount > 0 ? totalRevenue / totalSalesCount : 0;
+  const conversionRate =
+    customers.length > 0
+      ? (customers.filter((c) => c.status === 'CONVERTIDO').length / customers.length) * 100
+      : 0;
+
   return (
     <>
       <AdminTopBar
         title={isVendedor ? 'Meu Dashboard' : 'Painel Executivo'}
-        subtitle="Atualizado há 2 min"
+        subtitle="Dados em tempo real"
       />
       <div className="flex-1 overflow-y-auto admin-scroll p-4">
         {/* KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mb-3">
-          <KPICard label={isVendedor ? 'Minha receita' : 'Receita total'} value="R$ 84,2K" delta={18.4} deltaLabel="vs mês anterior" icon={DollarSign} accent="teal" />
-          <KPICard label={isVendedor ? 'Minhas vendas' : 'Vendas'} value="347" delta={12.1} deltaLabel="vs mês anterior" icon={ShoppingBag} accent="blue" />
-          <KPICard label="Ticket médio" value="R$ 242" delta={5.7} deltaLabel="vs mês anterior" icon={LineChart} accent="purple" />
-          <KPICard label="Conversão" value="8,3%" delta={-1.2} deltaLabel="vs mês anterior" icon={Target} accent="amber" />
+          <KPICard
+            label={isVendedor ? 'Minha receita' : 'Receita total'}
+            value={formatBRL(totalRevenue)}
+            icon={DollarSign}
+            accent="teal"
+          />
+          <KPICard
+            label={isVendedor ? 'Minhas vendas' : 'Vendas'}
+            value={totalSalesCount.toString()}
+            icon={ShoppingBag}
+            accent="blue"
+          />
+          <KPICard
+            label="Ticket médio"
+            value={formatBRL(avgTicket)}
+            icon={LineChart}
+            accent="purple"
+          />
+          <KPICard
+            label="Conversão"
+            value={`${conversionRate.toFixed(1)}%`}
+            icon={Target}
+            accent="amber"
+          />
         </div>
 
         {/* Charts */}

@@ -19,7 +19,7 @@ export function StoresPage() {
             Nossas<br /><em className="italic text-sand">lojas físicas</em>
           </h1>
           <p className="text-[13px] tracking-[0.12em] uppercase text-warm-gray-light mt-8">
-            Paulo Afonso · Bahia
+            Recife · Pernambuco
           </p>
         </div>
       </section>

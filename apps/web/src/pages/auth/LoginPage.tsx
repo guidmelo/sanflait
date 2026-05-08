@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useAuth, demoUsers } from '@/stores/auth';
+import { SanflaitLogo } from '@/components/public/SanflaitLogo';
 
 export function LoginPage() {
   const [email, setEmail] = useState('guilherme');
@@ -35,8 +36,8 @@ export function LoginPage() {
           }}
         />
         <div className="relative z-10 p-12 lg:p-16 flex flex-col justify-between w-full">
-          <Link to="/" className="font-serif text-2xl tracking-[0.2em] font-light text-cream">
-            SANFLAIT
+          <Link to="/" aria-label="Sanflait" style={{ color: '#C4A040' }}>
+            <SanflaitLogo className="text-2xl" />
           </Link>
           <div>
             <p className="text-[10px] tracking-[0.25em] uppercase text-gold mb-5">Painel interno</p>
@@ -55,9 +56,9 @@ export function LoginPage() {
       {/* Right side — form */}
       <div className="flex-1 md:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
-          <div className="md:hidden mb-8 text-center">
-            <Link to="/" className="font-serif text-xl tracking-[0.2em] text-ink-text-1">
-              SANFLAIT
+          <div className="md:hidden mb-8 text-center text-ink-text-1">
+            <Link to="/" aria-label="Sanflait">
+              <SanflaitLogo className="text-xl" />
             </Link>
           </div>
 

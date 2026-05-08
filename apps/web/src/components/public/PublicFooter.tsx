@@ -92,7 +92,7 @@ export function PublicFooter() {
         </div>
 
         <p className="text-center text-[10px] tracking-[0.08em] text-sand">
-          © 2026 Sanflait · Todos os direitos reservados · Paulo Afonso, BA
+          © 2026 Sanflait · Todos os direitos reservados · Recife, PE
         </p>
       </div>
     </footer>

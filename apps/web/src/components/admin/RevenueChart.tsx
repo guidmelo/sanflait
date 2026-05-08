@@ -2,7 +2,7 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from 
 import { monthlyRevenue } from '@/lib/mock';
 
 export function RevenueChart() {
-  const max = Math.max(...monthlyRevenue.map((d) => d.value));
+  const max = Math.max(...monthlyRevenue.map((d) => d.value), 1);
   return (
     <div className="h-44">
       <ResponsiveContainer width="100%" height="100%">

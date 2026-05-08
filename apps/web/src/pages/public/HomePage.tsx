@@ -78,7 +78,7 @@ export function HomePage() {
             transition={{ duration: 0.7, delay: 0.5 }}
             className="text-[11px] tracking-[0.18em] uppercase text-warm-gray-light mt-6 mb-10"
           >
-            Elegância contemporânea · Paulo Afonso, BA
+            Elegância contemporânea · Recife, PE
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -133,7 +133,7 @@ export function HomePage() {
           <p className="text-[14px] leading-[1.8] text-warm-gray mb-8 max-w-md">
             Peças que transcendem tendências. Uma curadoria de silhuetas
             elegantes para o cotidiano contemporâneo, vestindo o homem e a
-            mulher de Paulo Afonso e região com sofisticação atemporal.
+            mulher de Recife e região com sofisticação atemporal.
           </p>
           <Link to="/colecoes" className="editorial-link text-charcoal hover:text-gold">
             Ver lookbook completo <ArrowRight size={12} />

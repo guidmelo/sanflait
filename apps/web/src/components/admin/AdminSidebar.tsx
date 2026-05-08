@@ -55,11 +55,14 @@ export function AdminSidebar() {
     >
       {/* Logo + toggle */}
       <div className="h-12 flex items-center justify-between px-2 border-b border-line">
-        <div className="w-8 h-8 rounded-md bg-accent-blue text-white flex items-center justify-center text-[10px] font-semibold tracking-wider flex-shrink-0">
-          SN
+        <div
+          className="w-8 h-8 rounded-md flex items-center justify-center text-[10px] font-semibold tracking-wider flex-shrink-0"
+          style={{ background: '#0D3829', color: '#C4A040' }}
+        >
+          SF
         </div>
         {!collapsed && (
-          <span className="text-[11px] font-semibold tracking-[0.12em] text-ink-text-1 ml-2 flex-1">
+          <span className="text-[11px] font-semibold tracking-[0.12em] ml-2 flex-1" style={{ color: '#C4A040' }}>
             SANFLAIT
           </span>
         )}
