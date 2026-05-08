@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -10,6 +11,8 @@ import {
   Settings,
   KanbanSquare,
   Package,
+  ChevronRight,
+  LogOut,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth, type Role } from '@/stores/auth';
@@ -36,11 +39,8 @@ const NAV2: NavItem[] = [
   { to: '/app/inventory', label: 'Estoque', icon: Package, roles: ['ADMIN', 'GERENTE'] },
 ];
 
-interface SidebarProps {
-  collapsed?: boolean;
-}
-
-export function AdminSidebar({ collapsed = true }: SidebarProps) {
+export function AdminSidebar() {
+  const [collapsed, setCollapsed] = useState(true);
   const { user, logout } = useAuth();
   const role = user?.role ?? 'ADMIN';
   const visible = NAV.filter((n) => n.roles.includes(role));
@@ -49,21 +49,37 @@ export function AdminSidebar({ collapsed = true }: SidebarProps) {
   return (
     <aside
       className={cn(
-        'bg-ink-1 border-r border-line flex flex-col items-stretch flex-shrink-0 transition-all',
-        collapsed ? 'w-[60px]' : 'w-[220px]',
+        'bg-ink-1 border-r border-line flex flex-col items-stretch flex-shrink-0 transition-all duration-200',
+        collapsed ? 'w-[60px]' : 'w-[200px]',
       )}
     >
-      <div className="h-12 flex items-center justify-center border-b border-line">
-        <div className="w-8 h-8 rounded-md bg-accent-blue text-white flex items-center justify-center text-[10px] font-semibold tracking-wider">
+      {/* Logo + toggle */}
+      <div className="h-12 flex items-center justify-between px-2 border-b border-line">
+        <div className="w-8 h-8 rounded-md bg-accent-blue text-white flex items-center justify-center text-[10px] font-semibold tracking-wider flex-shrink-0">
           SN
         </div>
+        {!collapsed && (
+          <span className="text-[11px] font-semibold tracking-[0.12em] text-ink-text-1 ml-2 flex-1">
+            SANFLAIT
+          </span>
+        )}
+        <button
+          onClick={() => setCollapsed((c) => !c)}
+          className="text-ink-text-3 hover:text-ink-text-1 p-1 rounded transition-colors ml-auto"
+          aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
+        >
+          <ChevronRight
+            size={14}
+            className={cn('transition-transform duration-200', !collapsed && 'rotate-180')}
+          />
+        </button>
       </div>
 
       <nav className="flex-1 py-3 flex flex-col gap-0.5 px-2 admin-scroll overflow-y-auto">
         {visible.map((item) => (
           <SidebarLink key={item.to} item={item} collapsed={collapsed} />
         ))}
-        <div className="my-3 mx-3 h-px bg-line" />
+        <div className="my-3 mx-1 h-px bg-line" />
         {visible2.map((item) => (
           <SidebarLink key={item.to} item={item} collapsed={collapsed} />
         ))}
@@ -76,21 +92,19 @@ export function AdminSidebar({ collapsed = true }: SidebarProps) {
         />
         <button
           onClick={logout}
-          className={cn(
-            'flex items-center gap-3 px-2 py-2 rounded-md transition-colors text-ink-text-3 hover:bg-ink-3 hover:text-ink-text-1 mt-1',
-          )}
+          className="flex items-center gap-2.5 px-2 py-2 rounded-md transition-colors text-ink-text-3 hover:bg-accent-red-dim hover:text-accent-red mt-1 w-full"
+          title={collapsed ? 'Sair' : undefined}
         >
           <div
-            className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-medium text-white flex-shrink-0"
+            className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-medium text-white flex-shrink-0"
             style={{ background: user?.avatarColor ?? '#8B5CF6' }}
           >
             {user?.initials ?? '?'}
           </div>
           {!collapsed && (
-            <span className="text-[12px] truncate">
-              {user?.name?.split(' ')[0] ?? 'Sair'}
-            </span>
+            <span className="text-[11px] truncate flex-1 text-left">{user?.name?.split(' ')[0] ?? 'Usuário'}</span>
           )}
+          {!collapsed && <LogOut size={12} className="flex-shrink-0" />}
         </button>
       </div>
     </aside>
@@ -105,7 +119,7 @@ function SidebarLink({ item, collapsed }: { item: NavItem; collapsed: boolean })
       end={item.to.endsWith('/dashboard')}
       className={({ isActive }) =>
         cn(
-          'flex items-center gap-3 px-2 py-2 rounded-md transition-colors',
+          'flex items-center gap-2.5 px-2 py-2 rounded-md transition-colors',
           collapsed && 'justify-center',
           isActive
             ? 'bg-accent-blue-dim text-accent-blue'
@@ -114,7 +128,7 @@ function SidebarLink({ item, collapsed }: { item: NavItem; collapsed: boolean })
       }
       title={collapsed ? item.label : undefined}
     >
-      <Icon size={16} strokeWidth={1.75} />
+      <Icon size={15} strokeWidth={1.75} className="flex-shrink-0" />
       {!collapsed && <span className="text-[12px]">{item.label}</span>}
     </NavLink>
   );
