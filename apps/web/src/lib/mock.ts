@@ -1,4 +1,4 @@
-// Mock data — substitua por chamadas reais à API quando disponível
+// Catálogo Sanflait — fonte de dados offline (substitua por API quando disponível)
 export interface Product {
   id: string;
   slug: string;
@@ -66,19 +66,28 @@ export interface Store {
   description: string;
 }
 
-// ─── CATÁLOGO SANFLAIT ───────────────────────────────────────────────────────
+// ─── CATÁLOGO REAL SANFLAIT ───────────────────────────────────────────────────
+// Para adicionar fotos: substitua os arquivos .jpg em public/produtos/{categoria}/{produto}/
+// foto-principal.jpg → capa do produto
+// detalhe-01.jpg     → segunda imagem da galeria
+// detalhe-02.jpg     → terceira imagem da galeria
 
 export const products: Product[] = [
-  // ── CAMISAS ──────────────────────────────────────────────────────────────
+
+  // ── CAMISAS MASCULINAS ──────────────────────────────────────────────────────
   {
-    id: 'c01',
+    id: 'cm-01',
     slug: 'camisa-polo-masculina',
     name: 'Camisa Polo Masculina',
     category: 'Camisas',
-    collection: 'Camisas',
+    collection: 'Camisas Masculinas',
     price: 99.90,
-    description: 'Polo masculina confeccionada com tecido de alta qualidade e excelente acabamento. Ideal para quem busca elegância e versatilidade no dia a dia, do casual ao semi-formal.',
-    images: [],
+    description: 'Polo masculina confeccionada com tecido de alta qualidade e excelente acabamento. Versatilidade garantida para composições casuais e semi-formais no dia a dia.',
+    images: [
+      '/produtos/camisas-masculinas/camisa-polo/foto-principal.jpg',
+      '/produtos/camisas-masculinas/camisa-polo/detalhe-01.jpg',
+      '/produtos/camisas-masculinas/camisa-polo/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Branco', size: 'P', stock: 0 },
       { color: 'Branco', size: 'M', stock: 0 },
@@ -89,64 +98,39 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'c02',
-    slug: 'camisa-polo-feminina',
-    name: 'Camisa Polo Feminina',
-    category: 'Camisas',
-    collection: 'Camisas',
-    price: 99.90,
-    description: 'Polo feminina com modelagem estruturada e tecido respirável. Combina praticidade e sofisticação para o cotidiano moderno.',
-    images: [],
-    variants: [
-      { color: 'Branco', size: 'P', stock: 0 },
-      { color: 'Branco', size: 'M', stock: 0 },
-      { color: 'Branco', size: 'G', stock: 0 },
-      { color: 'Preto', size: 'P', stock: 0 },
-      { color: 'Preto', size: 'M', stock: 0 },
-    ],
-  },
-  {
-    id: 'c03',
+    id: 'cm-02',
     slug: 'camisa-basica-masculina',
     name: 'Camisa Básica Masculina',
     category: 'Camisas',
-    collection: 'Camisas',
+    collection: 'Camisas Masculinas',
     price: 79.90,
-    description: 'Camisa básica masculina de corte reto e caimento limpo. Peça coringa para composições do dia a dia, com conforto e durabilidade garantidos.',
-    images: [],
+    description: 'Camisa básica masculina de corte reto e caimento limpo. Peça essencial para composições do cotidiano com conforto e durabilidade.',
+    images: [
+      '/produtos/camisas-masculinas/camisa-basica/foto-principal.jpg',
+      '/produtos/camisas-masculinas/camisa-basica/detalhe-01.jpg',
+      '/produtos/camisas-masculinas/camisa-basica/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Branco', size: 'P', stock: 0 },
       { color: 'Branco', size: 'M', stock: 0 },
       { color: 'Branco', size: 'G', stock: 0 },
-      { color: 'Preto', size: 'P', stock: 0 },
       { color: 'Preto', size: 'M', stock: 0 },
       { color: 'Cinza', size: 'M', stock: 0 },
     ],
   },
   {
-    id: 'c04',
-    slug: 'camisa-basica-feminina',
-    name: 'Camisa Básica Feminina',
-    category: 'Camisas',
-    collection: 'Camisas',
-    price: 79.90,
-    description: 'Camisa básica feminina com modelagem versátil e tecido macio. Essencial no guarda-roupa de quem valoriza simplicidade com estilo.',
-    images: [],
-    variants: [
-      { color: 'Branco', size: 'P', stock: 0 },
-      { color: 'Branco', size: 'M', stock: 0 },
-      { color: 'Preto', size: 'M', stock: 0 },
-    ],
-  },
-  {
-    id: 'c05',
+    id: 'cm-03',
     slug: 'camisa-social-masculina',
     name: 'Camisa Social Masculina',
     category: 'Camisas',
-    collection: 'Camisas',
+    collection: 'Camisas Masculinas',
     price: 129.90,
-    description: 'Camisa social masculina com corte tradicional e tecido de alta qualidade. Acabamento refinado e costura impecável, ideal para o ambiente corporativo e ocasiões formais.',
-    images: [],
+    description: 'Social masculina com corte tradicional, tecido refinado e costura impecável. Ideal para o ambiente corporativo e ocasiões que exigem apresentação.',
+    images: [
+      '/produtos/camisas-masculinas/camisa-social/foto-principal.jpg',
+      '/produtos/camisas-masculinas/camisa-social/detalhe-01.jpg',
+      '/produtos/camisas-masculinas/camisa-social/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Branco', size: 'P', stock: 0 },
       { color: 'Branco', size: 'M', stock: 0 },
@@ -156,29 +140,38 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'c06',
+    id: 'cm-04',
     slug: 'camisa-manga-longa-masculina',
     name: 'Camisa Manga Longa Masculina',
     category: 'Camisas',
-    collection: 'Camisas',
+    collection: 'Camisas Masculinas',
     price: 109.90,
-    description: 'Manga longa masculina com tecido leve e modelagem confortável. Versátil para diversas ocasiões, do casual ao passeio, com um toque de sofisticação.',
-    images: [],
+    description: 'Manga longa com tecido leve e modelagem confortável. Versátil para diversas ocasiões, do casual ao passeio, com toque de sofisticação.',
+    images: [
+      '/produtos/camisas-masculinas/camisa-manga-longa/foto-principal.jpg',
+      '/produtos/camisas-masculinas/camisa-manga-longa/detalhe-01.jpg',
+      '/produtos/camisas-masculinas/camisa-manga-longa/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Branco', size: 'P', stock: 0 },
       { color: 'Branco', size: 'M', stock: 0 },
       { color: 'Preto', size: 'M', stock: 0 },
+      { color: 'Cinza', size: 'M', stock: 0 },
     ],
   },
   {
-    id: 'c07',
+    id: 'cm-05',
     slug: 'camisa-manga-longa-social-masculina',
     name: 'Camisa Manga Longa Social Masculina',
     category: 'Camisas',
-    collection: 'Camisas',
+    collection: 'Camisas Masculinas',
     price: 139.90,
-    description: 'Social de manga longa com tecido premium e caimento preciso. Destinada a quem exige presença e elegância em reuniões, eventos e ambientes corporativos.',
-    images: [],
+    description: 'Social de manga longa com tecido premium e caimento preciso. Para quem exige presença e elegância em reuniões e ambientes corporativos.',
+    images: [
+      '/produtos/camisas-masculinas/camisa-manga-longa-social/foto-principal.jpg',
+      '/produtos/camisas-masculinas/camisa-manga-longa-social/detalhe-01.jpg',
+      '/produtos/camisas-masculinas/camisa-manga-longa-social/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Branco', size: 'P', stock: 0 },
       { color: 'Branco', size: 'M', stock: 0 },
@@ -187,30 +180,39 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'c08',
+    id: 'cm-06',
     slug: 'camisa-tecido-botao',
     name: 'Camisa Tecido de Botão',
     category: 'Camisas',
-    collection: 'Camisas',
+    collection: 'Camisas Masculinas',
     price: 119.90,
-    description: 'Camisa de tecido com abotoamento frontal e modelagem clean. Peça que equilibra despojamento e elegância, perfeita para composições variadas.',
-    images: [],
+    description: 'Camisa de tecido com abotoamento frontal e modelagem clean. Equilíbrio perfeito entre o despojado e o elegante para composições variadas.',
+    images: [
+      '/produtos/camisas-masculinas/camisa-tecido-botao/foto-principal.jpg',
+      '/produtos/camisas-masculinas/camisa-tecido-botao/detalhe-01.jpg',
+      '/produtos/camisas-masculinas/camisa-tecido-botao/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Bege', size: 'P', stock: 0 },
       { color: 'Bege', size: 'M', stock: 0 },
       { color: 'Branco', size: 'M', stock: 0 },
+      { color: 'Preto', size: 'M', stock: 0 },
     ],
   },
   {
-    id: 'c09',
+    id: 'cm-07',
     slug: 'camisa-trabalhada',
     name: 'Camisa Trabalhada',
     category: 'Camisas',
-    collection: 'Camisas',
+    collection: 'Camisas Masculinas',
     price: 129.90,
     badge: 'Destaque',
     description: 'Camisa com detalhes trabalhados e textura diferenciada. Para quem busca destaque nas composições sem abrir mão do refinamento.',
-    images: [],
+    images: [
+      '/produtos/camisas-masculinas/camisa-trabalhada/foto-principal.jpg',
+      '/produtos/camisas-masculinas/camisa-trabalhada/detalhe-01.jpg',
+      '/produtos/camisas-masculinas/camisa-trabalhada/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Preto', size: 'P', stock: 0 },
       { color: 'Preto', size: 'M', stock: 0 },
@@ -218,29 +220,38 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'c10',
+    id: 'cm-08',
     slug: 'camisa-canelada',
     name: 'Camisa Canelada',
     category: 'Camisas',
-    collection: 'Camisas',
+    collection: 'Camisas Masculinas',
     price: 89.90,
-    description: 'Camisa em tecido canelado com textura marcante e toque agradável. Visual contemporâneo e confortável para o cotidiano.',
-    images: [],
+    description: 'Camisa em tecido canelado com textura marcante e toque agradável. Visual contemporâneo e confortável para o uso diário.',
+    images: [
+      '/produtos/camisas-masculinas/camisa-canelada/foto-principal.jpg',
+      '/produtos/camisas-masculinas/camisa-canelada/detalhe-01.jpg',
+      '/produtos/camisas-masculinas/camisa-canelada/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Preto', size: 'P', stock: 0 },
       { color: 'Preto', size: 'M', stock: 0 },
       { color: 'Cinza', size: 'M', stock: 0 },
+      { color: 'Branco', size: 'M', stock: 0 },
     ],
   },
   {
-    id: 'c11',
+    id: 'cm-09',
     slug: 'camisa-xadrez',
     name: 'Camisa Xadrez',
     category: 'Camisas',
-    collection: 'Camisas',
+    collection: 'Camisas Masculinas',
     price: 99.90,
-    description: 'Camisa xadrez clássica com estampa equilibrada e tecido de boa durabilidade. Versatilidade garantida nas composições casuais e passeio.',
-    images: [],
+    description: 'Camisa xadrez clássica com estampa equilibrada e tecido durável. Versatilidade garantida para composições casuais e passeio.',
+    images: [
+      '/produtos/camisas-masculinas/camisa-xadrez/foto-principal.jpg',
+      '/produtos/camisas-masculinas/camisa-xadrez/detalhe-01.jpg',
+      '/produtos/camisas-masculinas/camisa-xadrez/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Azul/Branco', size: 'P', stock: 0 },
       { color: 'Azul/Branco', size: 'M', stock: 0 },
@@ -248,32 +259,61 @@ export const products: Product[] = [
     ],
   },
 
-  // ── CALÇAS ────────────────────────────────────────────────────────────────
+  // ── CAMISAS FEMININAS ───────────────────────────────────────────────────────
   {
-    id: 'ca01',
-    slug: 'calca-sarja',
-    name: 'Calça Sarja',
-    category: 'Calças',
-    collection: 'Calças',
-    price: 119.90,
-    description: 'Calça em sarja com corte reto e caimento confortável. Durabilidade e praticidade para o dia a dia, com visual limpo e versátil.',
-    images: [],
+    id: 'cf-01',
+    slug: 'camisa-polo-feminina',
+    name: 'Camisa Polo Feminina',
+    category: 'Camisas',
+    collection: 'Camisas Femininas',
+    price: 99.90,
+    description: 'Polo feminina com modelagem estruturada e tecido respirável. Praticidade e sofisticação para o cotidiano moderno.',
+    images: [
+      '/produtos/camisas-femininas/camisa-polo/foto-principal.jpg',
+      '/produtos/camisas-femininas/camisa-polo/detalhe-01.jpg',
+      '/produtos/camisas-femininas/camisa-polo/detalhe-02.jpg',
+    ],
     variants: [
-      { color: 'Areia', size: '38', stock: 0 },
-      { color: 'Areia', size: '40', stock: 0 },
-      { color: 'Preto', size: '38', stock: 0 },
-      { color: 'Preto', size: '40', stock: 0 },
+      { color: 'Branco', size: 'P', stock: 0 },
+      { color: 'Branco', size: 'M', stock: 0 },
+      { color: 'Preto', size: 'P', stock: 0 },
+      { color: 'Preto', size: 'M', stock: 0 },
     ],
   },
   {
-    id: 'ca02',
+    id: 'cf-02',
+    slug: 'camisa-basica-feminina',
+    name: 'Camisa Básica Feminina',
+    category: 'Camisas',
+    collection: 'Camisas Femininas',
+    price: 79.90,
+    description: 'Camisa básica feminina com modelagem versátil e tecido macio. Essencial no guarda-roupa de quem valoriza simplicidade com estilo.',
+    images: [
+      '/produtos/camisas-femininas/camisa-basica/foto-principal.jpg',
+      '/produtos/camisas-femininas/camisa-basica/detalhe-01.jpg',
+      '/produtos/camisas-femininas/camisa-basica/detalhe-02.jpg',
+    ],
+    variants: [
+      { color: 'Branco', size: 'P', stock: 0 },
+      { color: 'Branco', size: 'M', stock: 0 },
+      { color: 'Preto', size: 'M', stock: 0 },
+    ],
+  },
+
+  // ── CALÇAS ──────────────────────────────────────────────────────────────────
+  {
+    id: 'ca-01',
     slug: 'calca-jeans',
     name: 'Calça Jeans',
     category: 'Calças',
     collection: 'Calças',
     price: 129.90,
     description: 'Calça jeans de corte reto com tecido de qualidade e ótimo caimento. Clássico indispensável para composições casuais e passeio.',
-    images: [],
+    images: [
+      '/produtos/calcas/calca-jeans/foto-principal.jpg',
+      '/produtos/calcas/calca-jeans/detalhe-01.jpg',
+      '/produtos/calcas/calca-jeans/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Azul médio', size: '38', stock: 0 },
       { color: 'Azul médio', size: '40', stock: 0 },
@@ -282,14 +322,38 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'ca03',
+    id: 'ca-02',
+    slug: 'calca-sarja',
+    name: 'Calça Sarja',
+    category: 'Calças',
+    collection: 'Calças',
+    price: 119.90,
+    description: 'Calça em sarja com corte reto e caimento confortável. Durabilidade e praticidade para o dia a dia, com visual limpo e versátil.',
+    images: [
+      '/produtos/calcas/calca-sarja/foto-principal.jpg',
+      '/produtos/calcas/calca-sarja/detalhe-01.jpg',
+      '/produtos/calcas/calca-sarja/detalhe-02.jpg',
+    ],
+    variants: [
+      { color: 'Areia', size: '38', stock: 0 },
+      { color: 'Areia', size: '40', stock: 0 },
+      { color: 'Preto', size: '38', stock: 0 },
+      { color: 'Preto', size: '40', stock: 0 },
+    ],
+  },
+  {
+    id: 'ca-03',
     slug: 'calca-social',
     name: 'Calça Social',
     category: 'Calças',
     collection: 'Calças',
     price: 149.90,
-    description: 'Calça social com tecido refinado e modelagem precisa. Indicada para ambientes corporativos e ocasiões que exigem apresentação impecável.',
-    images: [],
+    description: 'Calça social com tecido refinado e modelagem precisa. Para ambientes corporativos e ocasiões que exigem apresentação impecável.',
+    images: [
+      '/produtos/calcas/calca-social/foto-principal.jpg',
+      '/produtos/calcas/calca-social/detalhe-01.jpg',
+      '/produtos/calcas/calca-social/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Preto', size: '38', stock: 0 },
       { color: 'Preto', size: '40', stock: 0 },
@@ -298,16 +362,39 @@ export const products: Product[] = [
     ],
   },
 
-  // ── BERMUDAS ──────────────────────────────────────────────────────────────
+  // ── BERMUDAS ────────────────────────────────────────────────────────────────
   {
-    id: 'b01',
+    id: 'bm-01',
+    slug: 'bermuda-jeans',
+    name: 'Bermuda Jeans',
+    category: 'Bermudas',
+    collection: 'Bermudas',
+    price: 79.90,
+    description: 'Bermuda jeans de corte limpo e tecido resistente. Clássico do guarda-roupa masculino para composições casuais do dia a dia.',
+    images: [
+      '/produtos/bermudas/bermuda-jeans/foto-principal.jpg',
+      '/produtos/bermudas/bermuda-jeans/detalhe-01.jpg',
+      '/produtos/bermudas/bermuda-jeans/detalhe-02.jpg',
+    ],
+    variants: [
+      { color: 'Azul médio', size: 'P', stock: 0 },
+      { color: 'Azul médio', size: 'M', stock: 0 },
+      { color: 'Azul escuro', size: 'M', stock: 0 },
+    ],
+  },
+  {
+    id: 'bm-02',
     slug: 'bermuda-tactel',
     name: 'Bermuda Tactel',
     category: 'Bermudas',
     collection: 'Bermudas',
     price: 69.90,
-    description: 'Bermuda em tactel leve e de secagem rápida. Perfeita para o calor do Nordeste, com conforto total para o dia a dia e momentos de lazer.',
-    images: [],
+    description: 'Bermuda em tactel leve e de secagem rápida. Perfeita para o clima do Nordeste, com conforto total para lazer e dia a dia.',
+    images: [
+      '/produtos/bermudas/bermuda-tactel/foto-principal.jpg',
+      '/produtos/bermudas/bermuda-tactel/detalhe-01.jpg',
+      '/produtos/bermudas/bermuda-tactel/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Preto', size: 'P', stock: 0 },
       { color: 'Preto', size: 'M', stock: 0 },
@@ -315,46 +402,39 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'b02',
+    id: 'bm-03',
     slug: 'bermuda-linho',
     name: 'Bermuda Linho',
     category: 'Bermudas',
     collection: 'Bermudas',
     price: 89.90,
-    description: 'Bermuda em linho com textura natural e respirabilidade superior. Elegante e confortável, ideal para passeios e ocasiões casuais com mais sofisticação.',
-    images: [],
+    description: 'Bermuda em linho com textura natural e respirabilidade superior. Elegante e confortável para passeios e ocasiões casuais com mais sofisticação.',
+    images: [
+      '/produtos/bermudas/bermuda-linho/foto-principal.jpg',
+      '/produtos/bermudas/bermuda-linho/detalhe-01.jpg',
+      '/produtos/bermudas/bermuda-linho/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Areia', size: 'P', stock: 0 },
       { color: 'Areia', size: 'M', stock: 0 },
       { color: 'Bege', size: 'M', stock: 0 },
     ],
   },
-  {
-    id: 'b03',
-    slug: 'bermuda-jeans',
-    name: 'Bermuda Jeans',
-    category: 'Bermudas',
-    collection: 'Bermudas',
-    price: 79.90,
-    description: 'Bermuda jeans de corte limpo e tecido resistente. Clássico do guarda-roupa masculino para composições casuais do dia a dia.',
-    images: [],
-    variants: [
-      { color: 'Azul médio', size: 'P', stock: 0 },
-      { color: 'Azul médio', size: 'M', stock: 0 },
-      { color: 'Azul escuro', size: 'M', stock: 0 },
-    ],
-  },
 
-  // ── ACESSÓRIOS ────────────────────────────────────────────────────────────
+  // ── ACESSÓRIOS ──────────────────────────────────────────────────────────────
   {
-    id: 'a01',
-    slug: 'cintos',
-    name: 'Cintos',
+    id: 'ac-01',
+    slug: 'cinto',
+    name: 'Cinto',
     category: 'Acessórios',
     collection: 'Acessórios',
     price: 59.90,
-    description: 'Cintos em couro e material sintético de qualidade, com fivelas robustas e acabamento cuidadoso. O detalhe que completa qualquer composição.',
-    images: [],
+    description: 'Cinto em couro e material de qualidade com fivela robusta e acabamento cuidadoso. O detalhe que completa qualquer composição.',
+    images: [
+      '/produtos/acessorios/cinto/foto-principal.jpg',
+      '/produtos/acessorios/cinto/detalhe-01.jpg',
+      '/produtos/acessorios/cinto/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Preto', size: '36', stock: 0 },
       { color: 'Preto', size: '38', stock: 0 },
@@ -362,14 +442,54 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'a02',
-    slug: 'gravatas',
-    name: 'Gravatas',
+    id: 'ac-02',
+    slug: 'suspensorio',
+    name: 'Suspensório',
     category: 'Acessórios',
     collection: 'Acessórios',
     price: 49.90,
-    description: 'Gravatas em tecido de qualidade com padrões clássicos e contemporâneos. Acabamento preciso para quem valoriza os detalhes na composição formal.',
-    images: [],
+    description: 'Suspensório com elástico de qualidade e presilhas resistentes. Funcional e estiloso, o acessório que diferencia nas composições formais.',
+    images: [
+      '/produtos/acessorios/suspensorio/foto-principal.jpg',
+      '/produtos/acessorios/suspensorio/detalhe-01.jpg',
+      '/produtos/acessorios/suspensorio/detalhe-02.jpg',
+    ],
+    variants: [
+      { color: 'Preto', size: 'Único', stock: 0 },
+      { color: 'Marinho', size: 'Único', stock: 0 },
+    ],
+  },
+  {
+    id: 'ac-03',
+    slug: 'carteira',
+    name: 'Carteira',
+    category: 'Acessórios',
+    collection: 'Acessórios',
+    price: 79.90,
+    description: 'Carteira masculina em material de alta qualidade. Design funcional com compartimentos para cartões, documentos e dinheiro.',
+    images: [
+      '/produtos/acessorios/carteira/foto-principal.jpg',
+      '/produtos/acessorios/carteira/detalhe-01.jpg',
+      '/produtos/acessorios/carteira/detalhe-02.jpg',
+    ],
+    variants: [
+      { color: 'Preto', size: 'Único', stock: 0 },
+      { color: 'Marrom', size: 'Único', stock: 0 },
+    ],
+  },
+  {
+    id: 'ac-04',
+    slug: 'gravata',
+    name: 'Gravata',
+    category: 'Acessórios',
+    collection: 'Acessórios',
+    price: 49.90,
+    description: 'Gravata em tecido de qualidade com padrões clássicos e contemporâneos. Acabamento preciso para quem valoriza os detalhes na composição formal.',
+    images: [
+      '/produtos/acessorios/gravata/foto-principal.jpg',
+      '/produtos/acessorios/gravata/detalhe-01.jpg',
+      '/produtos/acessorios/gravata/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Preto', size: 'Único', stock: 0 },
       { color: 'Marinho', size: 'Único', stock: 0 },
@@ -377,28 +497,18 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'a03',
-    slug: 'carteiras',
-    name: 'Carteiras',
-    category: 'Acessórios',
-    collection: 'Acessórios',
-    price: 79.90,
-    description: 'Carteiras masculinas em couro e material de alta qualidade. Design funcional com espaço inteligente para cartões, documentos e dinheiro.',
-    images: [],
-    variants: [
-      { color: 'Preto', size: 'Único', stock: 0 },
-      { color: 'Marrom', size: 'Único', stock: 0 },
-    ],
-  },
-  {
-    id: 'a04',
-    slug: 'meias',
-    name: 'Meias',
+    id: 'ac-05',
+    slug: 'meia',
+    name: 'Meia',
     category: 'Acessórios',
     collection: 'Acessórios',
     price: 19.90,
-    description: 'Meias masculinas em algodão e fibras de qualidade. Conforto e durabilidade para o dia a dia, disponíveis em modelos cano curto e médio.',
-    images: [],
+    description: 'Meias masculinas em algodão e fibras de qualidade. Conforto e durabilidade para o dia a dia, em modelos cano curto e médio.',
+    images: [
+      '/produtos/acessorios/meia/foto-principal.jpg',
+      '/produtos/acessorios/meia/detalhe-01.jpg',
+      '/produtos/acessorios/meia/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Preto', size: '38-43', stock: 0 },
       { color: 'Branco', size: '38-43', stock: 0 },
@@ -406,30 +516,39 @@ export const products: Product[] = [
     ],
   },
   {
-    id: 'a05',
-    slug: 'suspensorios',
-    name: 'Suspensórios',
+    id: 'ac-06',
+    slug: 'cueca',
+    name: 'Cueca',
     category: 'Acessórios',
     collection: 'Acessórios',
-    price: 49.90,
-    description: 'Suspensórios com elástico de alta qualidade e presilhas resistentes. Funcional e estiloso, o acessório que faz a diferença nas composições formais.',
-    images: [],
+    price: 29.90,
+    description: 'Cueca masculina em tecido macio e respirável. Conforto e qualidade para o uso diário, disponível em modelos boxer e slip.',
+    images: [
+      '/produtos/acessorios/cueca/foto-principal.jpg',
+      '/produtos/acessorios/cueca/detalhe-01.jpg',
+      '/produtos/acessorios/cueca/detalhe-02.jpg',
+    ],
     variants: [
-      { color: 'Preto', size: 'Único', stock: 0 },
-      { color: 'Marinho', size: 'Único', stock: 0 },
+      { color: 'Preto', size: 'P', stock: 0 },
+      { color: 'Preto', size: 'M', stock: 0 },
+      { color: 'Branco', size: 'M', stock: 0 },
     ],
   },
 
-  // ── CALÇADOS ──────────────────────────────────────────────────────────────
+  // ── CALÇADOS ────────────────────────────────────────────────────────────────
   {
-    id: 'cal01',
-    slug: 'sapatos',
-    name: 'Sapatos',
+    id: 'cl-01',
+    slug: 'sapato',
+    name: 'Sapato',
     category: 'Calçados',
     collection: 'Calçados',
     price: 199.90,
-    description: 'Sapatos masculinos com couro de qualidade e solado resistente. Acabamento impecável e conforto para o uso prolongado, do social ao passeio.',
-    images: [],
+    description: 'Sapato masculino com material de qualidade e solado resistente. Acabamento impecável e conforto para uso prolongado, do social ao passeio.',
+    images: [
+      '/produtos/calcados/sapato/foto-principal.jpg',
+      '/produtos/calcados/sapato/detalhe-01.jpg',
+      '/produtos/calcados/sapato/detalhe-02.jpg',
+    ],
     variants: [
       { color: 'Preto', size: '40', stock: 0 },
       { color: 'Preto', size: '41', stock: 0 },
@@ -476,9 +595,7 @@ export const stores: Store[] = [
 ];
 
 export const vendors: Vendor[] = [];
-
 export const customers: Customer[] = [];
-
 export const sales: Sale[] = [];
 
 // Time series for charts

@@ -6,7 +6,8 @@ import { formatBRL } from '@/lib/utils';
 import { useProducts } from '@/hooks/useProducts';
 
 const COLLECTIONS = [
-  { slug: 'camisas', label: 'Camisas' },
+  { slug: 'camisas-masculinas', label: 'Camisas Masc.' },
+  { slug: 'camisas-femininas', label: 'Camisas Fem.' },
   { slug: 'calcas', label: 'Calças' },
   { slug: 'bermudas', label: 'Bermudas' },
   { slug: 'acessorios', label: 'Acessórios' },
@@ -87,7 +88,7 @@ export function HomePage() {
             transition={{ duration: 0.7, delay: 0.7 }}
             className="flex flex-wrap items-center gap-4"
           >
-            <Link to="/colecoes/camisas" className="public-cta-dark">
+            <Link to="/colecoes/camisas-masculinas" className="public-cta-dark">
               <span>Explorar coleção</span>
               <ArrowRight size={12} />
             </Link>
