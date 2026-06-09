@@ -1,0 +1,8 @@
+Pasta de imagens — Bermudas
+Convenção de nomenclatura: {slug}-{numero}.jpg
+Exemplos:
+  tactel-01.jpg
+  linho-01.jpg
+  jeans-01.jpg
+
+Dimensões recomendadas: 800 x 1067px (proporção 3:4) · JPEG · qualidade 85

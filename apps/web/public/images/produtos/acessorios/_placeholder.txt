@@ -1,0 +1,10 @@
+Pasta de imagens — Acessórios
+Convenção de nomenclatura: {slug}-{numero}.jpg
+Exemplos:
+  cintos-01.jpg
+  gravatas-01.jpg
+  carteiras-01.jpg
+  meias-01.jpg
+  suspensorios-01.jpg
+
+Dimensões recomendadas: 800 x 800px (proporção 1:1 ou 3:4) · JPEG · qualidade 85

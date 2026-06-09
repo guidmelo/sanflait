@@ -6,12 +6,11 @@ import { formatBRL } from '@/lib/utils';
 import { useProducts } from '@/hooks/useProducts';
 
 const COLLECTIONS = [
-  { slug: 'novidades', label: 'Novidades' },
-  { slug: 'feminino', label: 'Feminino' },
-  { slug: 'masculino', label: 'Masculino' },
-  { slug: 'casual', label: 'Casual' },
-  { slug: 'essenciais', label: 'Essenciais' },
-  { slug: 'outlet', label: 'Outlet' },
+  { slug: 'camisas', label: 'Camisas' },
+  { slug: 'calcas', label: 'Calças' },
+  { slug: 'bermudas', label: 'Bermudas' },
+  { slug: 'acessorios', label: 'Acessórios' },
+  { slug: 'calcados', label: 'Calçados' },
 ];
 
 export function HomePage() {
@@ -88,7 +87,7 @@ export function HomePage() {
             transition={{ duration: 0.7, delay: 0.7 }}
             className="flex flex-wrap items-center gap-4"
           >
-            <Link to="/colecoes/novidades" className="public-cta-dark">
+            <Link to="/colecoes/camisas" className="public-cta-dark">
               <span>Explorar coleção</span>
               <ArrowRight size={12} />
             </Link>

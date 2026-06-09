@@ -1,0 +1,16 @@
+Pasta de imagens — Camisas
+Convenção de nomenclatura: {slug}-{numero}.jpg
+Exemplos:
+  polo-masculina-01.jpg
+  polo-feminina-01.jpg
+  basica-masculina-01.jpg
+  basica-feminina-01.jpg
+  social-masculina-01.jpg
+  manga-longa-masculina-01.jpg
+  manga-longa-social-masculina-01.jpg
+  tecido-botao-01.jpg
+  trabalhada-01.jpg
+  canelada-01.jpg
+  xadrez-01.jpg
+
+Dimensões recomendadas: 800 x 1067px (proporção 3:4) · JPEG · qualidade 85

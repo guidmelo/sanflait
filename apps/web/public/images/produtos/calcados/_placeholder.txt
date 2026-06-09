@@ -1,0 +1,7 @@
+Pasta de imagens — Calçados
+Convenção de nomenclatura: {slug}-{numero}.jpg
+Exemplos:
+  sapatos-01.jpg
+  sapatos-02.jpg
+
+Dimensões recomendadas: 800 x 1067px (proporção 3:4) · JPEG · qualidade 85
