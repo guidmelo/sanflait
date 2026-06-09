@@ -38,14 +38,15 @@ export function useProducts(params?: { collection?: string; category?: string })
   const qc = useQueryClient();
 
   useEffect(() => {
-    if (!supabase) return;
-    const ch = supabase
+    const sb = supabase;
+    if (!sb) return;
+    const ch = sb
       .channel('products-realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'Product' }, () => {
         qc.invalidateQueries({ queryKey: ['products'] });
       })
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    return () => { sb.removeChannel(ch); };
   }, [qc]);
 
   return useQuery<ReturnType<typeof normalise>[]>({
@@ -64,14 +65,15 @@ export function useProduct(slug?: string) {
   const qc = useQueryClient();
 
   useEffect(() => {
-    if (!supabase || !slug) return;
-    const ch = supabase
+    const sb = supabase;
+    if (!sb || !slug) return;
+    const ch = sb
       .channel(`product-${slug}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'Product' }, () => {
         qc.invalidateQueries({ queryKey: ['product', slug] });
       })
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    return () => { sb.removeChannel(ch); };
   }, [slug, qc]);
 
   return useQuery<ReturnType<typeof normalise>>({

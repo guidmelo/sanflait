@@ -14,8 +14,8 @@ type EditForm = {
   price: string; oldPrice: string; badge: string; description: string;
 };
 const EMPTY_FORM: EditForm = { name: '', collection: '', category: '', price: '', oldPrice: '', badge: '', description: '' };
-const COLLECTIONS = ['Primavera 2026', 'Inverno 2026', 'Essenciais', 'Novidades', 'Outlet'];
-const CATEGORIES = ['Vestidos', 'Camisas', 'Blazers', 'Calças', 'Bermudas', 'Blusas', 'Casacos', 'Cintos', 'Acessórios', 'Outros'];
+const COLLECTIONS = ['Camisas Masculinas', 'Camisas Femininas', 'Calças', 'Bermudas', 'Acessórios', 'Calçados'];
+const CATEGORIES = ['Camisas', 'Calças', 'Bermudas', 'Cinto', 'Suspensório', 'Carteira', 'Gravata', 'Meias', 'Cueca', 'Calçados', 'Outros'];
 
 export function ProductsPage() {
   // API hooks (when backend is configured)
@@ -121,9 +121,9 @@ export function ProductsPage() {
         // Local store fallback
         const slug = form.name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         if (editProduct) {
-          updateLocal(editProduct.id, { ...payload, price: payload.basePrice, images: pendingImages, variants: editProduct.variants ?? [] });
+          updateLocal(editProduct.id, { ...payload, price: payload.basePrice, oldPrice: payload.oldPrice ?? undefined, images: pendingImages, variants: (editProduct.variants ?? []).map(v => ({ color: v.color, size: v.size, stock: (v as unknown as { stock?: number }).stock ?? 0 })) } as never);
         } else {
-          addLocal({ id: `p${Date.now()}`, slug, price: payload.basePrice, images: pendingImages, variants: [], ...payload } as never);
+          addLocal({ id: `p${Date.now()}`, slug, price: payload.basePrice, variants: [], ...payload } as never);
         }
       }
       setSaved(true);
@@ -149,7 +149,7 @@ export function ProductsPage() {
 
   const handleExport = () => {
     const rows = products.map((p) => {
-      const price = (p as unknown as { price?: number }).price ?? Number(p.basePrice);
+      const price = (p as unknown as { price?: number }).price ?? Number((p as unknown as { basePrice?: number }).basePrice);
       return `${p.name};${p.collection ?? ''};${p.category};${price}`;
     }).join('\n');
     const blob = new Blob([`Nome;Coleção;Categoria;Preço\n${rows}`], { type: 'text/csv' });
@@ -166,7 +166,7 @@ export function ProductsPage() {
           {[
             { label: 'Total SKUs', value: products.length.toString(), accent: 'border-accent-blue' },
             { label: 'Com foto', value: products.filter((p) => (p.images?.length ?? 0) > 0).length.toString(), accent: 'border-accent-green' },
-            { label: 'Ticket médio', value: products.length > 0 ? formatBRL(products.reduce((s, p) => s + ((p as unknown as {price?: number}).price ?? Number(p.basePrice)), 0) / products.length) : 'R$ 0,00', accent: 'border-accent-teal' },
+            { label: 'Ticket médio', value: products.length > 0 ? formatBRL(products.reduce((s, p) => s + ((p as unknown as { price?: number; basePrice?: number }).price ?? Number((p as unknown as { basePrice?: number }).basePrice) ?? 0), 0) / products.length) : 'R$ 0,00', accent: 'border-accent-teal' },
             { label: 'Com desconto', value: products.filter((p) => p.oldPrice).length.toString(), accent: 'border-accent-amber' },
           ].map((k) => (
             <div key={k.label} className={cn('admin-card p-3 border-l-2 rounded-l-none', k.accent)}>
@@ -208,7 +208,7 @@ export function ProductsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {filtered.map((p, i) => {
-                const price = (p as unknown as { price?: number }).price ?? Number(p.basePrice);
+                const price = (p as unknown as { price?: number }).price ?? Number((p as unknown as { basePrice?: number }).basePrice);
                 return (
                   <div key={p.id} className="bg-ink-2 border border-line rounded overflow-hidden hover:border-line-strong transition-colors">
                     <div className="aspect-[4/3] bg-ink-3 relative overflow-hidden">
