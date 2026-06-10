@@ -2,17 +2,23 @@ import { Link, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { ArrowRight, Heart, MessageCircle, Truck, RefreshCw, Shield, Loader2 } from 'lucide-react';
 import { useProducts, useProduct } from '@/hooks/useProducts';
+import { products as mockProducts } from '@/lib/mock';
 import { formatBRL } from '@/lib/utils';
 import { useTracking } from '@/stores/tracking';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 
+const HAS_API = !!(import.meta.env.VITE_API_URL);
+
 export function ProductPage() {
   const { slug } = useParams();
-  const { data: product, isLoading } = useProduct(slug);
-  const { data: allProducts = [] } = useProducts();
+  const { data: apiProduct, isLoading } = useProduct(slug);
+  const { data: apiAllProducts = [] } = useProducts();
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const { vendorSlug } = useTracking();
+
+  const product = HAS_API ? apiProduct : mockProducts.find((p) => p.slug === slug);
+  const allProducts = HAS_API ? apiAllProducts : mockProducts;
 
   const colors = Array.from(new Set((product?.variants ?? []).map((v) => v.color)));
   const sizes = Array.from(new Set((product?.variants ?? []).map((v) => v.size)));
@@ -27,7 +33,7 @@ export function ProductPage() {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
-  if (isLoading) {
+  if (HAS_API && isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center bg-cream">
         <Loader2 size={24} className="animate-spin text-warm-gray" />
@@ -209,7 +215,7 @@ export function ProductPage() {
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {allProducts
+            {(allProducts as typeof mockProducts)
               .filter((p) => p.id !== product.id)
               .slice(0, 4)
               .map((p, i) => (
